@@ -1,6 +1,11 @@
 #!/usr/bin/env bun
 import { Command } from "commander";
 import { creditsCommand } from "./commands/credits.js";
+import { companiesSearchCommand } from "./commands/companies-search.js";
+import { peopleSearchCommand } from "./commands/people-search.js";
+import { peopleLookupCommand } from "./commands/people-lookup.js";
+import { peoplePhoneCommand } from "./commands/people-phone.js";
+import { peopleAnalyzeCommand } from "./commands/people-analyze.js";
 
 // Global error handler for uncaught exceptions
 process.on("uncaughtException", (error: Error) => {
@@ -23,51 +28,19 @@ const companies = program
   .command("companies")
   .description("Company search and lookup");
 
-companies
-  .command("search")
-  .description("Search 69M+ company profiles")
-  .action(() => {
-    console.error("Not implemented yet");
-    process.exit(1);
-  });
+companies.addCommand(companiesSearchCommand());
 
 // People command group
 const people = program
   .command("people")
   .description("People search, lookup, and enrichment");
 
-people
-  .command("search")
-  .description("Search 400M+ people profiles")
-  .action(() => {
-    console.error("Not implemented yet");
-    process.exit(1);
-  });
+people.addCommand(peopleSearchCommand());
+people.addCommand(peopleLookupCommand());
+people.addCommand(peoplePhoneCommand());
+people.addCommand(peopleAnalyzeCommand());
 
-people
-  .command("lookup")
-  .description("Reverse lookup by email or phone")
-  .action(() => {
-    console.error("Not implemented yet");
-    process.exit(1);
-  });
-
-people
-  .command("phone")
-  .description("Find mobile phone numbers")
-  .action(() => {
-    console.error("Not implemented yet");
-    process.exit(1);
-  });
-
-people
-  .command("analyze")
-  .description("AI personality analysis")
-  .action(() => {
-    console.error("Not implemented yet");
-    process.exit(1);
-  });
-
+// Async commands (Phase 3 — not yet implemented)
 people
   .command("export")
   .description("Bulk export with email discovery")
