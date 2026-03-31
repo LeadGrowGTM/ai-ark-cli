@@ -50,6 +50,9 @@ Plans:
 
 **UI hint**: no
 
+Plans:
+- [x] 02-01 — All 5 sync commands (companies search, people search/lookup/phone/analyze)
+
 **Success Criteria:**
 1. `ai-ark companies search --domain leadgrow.ai` returns company data as JSON
 2. `ai-ark people search --domain leadgrow.ai --seniority founder` returns matching profiles
@@ -122,4 +125,4 @@ All 24 v1 requirements mapped. 0 unmapped.
 
 ---
 *Roadmap created: 2026-03-31*
-*Last updated: 2026-03-31 after Phase 1 Plan 02 completion (Phase 1 complete)*
+*Last updated: 2026-03-31 after Phase 2 completion*
