@@ -10,15 +10,15 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Project Setup
 
 - [x] **SETUP-01**: Project initializes with Bun + TypeScript, builds to single executable CLI binary
-- [ ] **SETUP-02**: CLI reads API key from AI_ARK_API_KEY environment variable
-- [ ] **SETUP-03**: CLI displays help text with all available commands and options
+- [x] **SETUP-02**: CLI reads API key from AI_ARK_API_KEY environment variable
+- [x] **SETUP-03**: CLI displays help text with all available commands and options
 
 ### API Client
 
-- [ ] **API-01**: Typed HTTP client with X-TOKEN auth header for all AI Ark endpoints
-- [ ] **API-02**: Rate limiter enforces 5 req/sec, 300/min, 18K/hr globally across all commands
+- [x] **API-01**: Typed HTTP client with X-TOKEN auth header for all AI Ark endpoints
+- [x] **API-02**: Rate limiter enforces 5 req/sec, 300/min, 18K/hr globally across all commands
 - [x] **API-03**: Full TypeScript types for all 14 API request/response schemas (derived from real response examples)
-- [ ] **API-04**: Error handling surfaces API error messages clearly (status code, message, path)
+- [x] **API-04**: Error handling surfaces API error messages clearly (status code, message, path)
 
 ### Core Commands
 
@@ -27,7 +27,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **CMD-03**: `ai-ark people lookup` wraps reverse people lookup (email/phone to person)
 - [ ] **CMD-04**: `ai-ark people phone` wraps mobile phone finder
 - [ ] **CMD-05**: `ai-ark people analyze` wraps personality analysis endpoint
-- [ ] **CMD-06**: `ai-ark credits` wraps fetch credit endpoint
+- [x] **CMD-06**: `ai-ark credits` wraps fetch credit endpoint
 
 ### Async Export Commands
 
@@ -82,18 +82,18 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | SETUP-01 | Phase 1 | Complete (01-01) |
-| SETUP-02 | Phase 1 | Pending |
-| SETUP-03 | Phase 1 | Pending |
-| API-01 | Phase 1 | Pending |
-| API-02 | Phase 1 | Pending |
+| SETUP-02 | Phase 1 | Complete (01-02) |
+| SETUP-03 | Phase 1 | Complete (01-02) |
+| API-01 | Phase 1 | Complete (01-02) |
+| API-02 | Phase 1 | Complete (01-02) |
 | API-03 | Phase 1 | Complete (01-01) |
-| API-04 | Phase 1 | Pending |
+| API-04 | Phase 1 | Complete (01-02) |
 | CMD-01 | Phase 2 | Pending |
 | CMD-02 | Phase 2 | Pending |
 | CMD-03 | Phase 2 | Pending |
 | CMD-04 | Phase 2 | Pending |
 | CMD-05 | Phase 2 | Pending |
-| CMD-06 | Phase 2 | Pending |
+| CMD-06 | Phase 1 | Complete (01-02) |
 | ASYNC-01 | Phase 3 | Pending |
 | ASYNC-02 | Phase 3 | Pending |
 | ASYNC-03 | Phase 3 | Pending |
@@ -113,4 +113,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-31*
-*Last updated: 2026-03-31 after initial definition*
+*Last updated: 2026-03-31 after Phase 1 Plan 02 completion*

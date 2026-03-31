@@ -27,7 +27,7 @@
 
 Plans:
 - [x] 01-01-PLAN.md — Project scaffold + TypeScript types for all 14 API schemas
-- [ ] 01-02-PLAN.md — HTTP client with auth, rate limiter, error handling, and credits command
+- [x] 01-02-PLAN.md — HTTP client with auth, rate limiter, error handling, and credits command
 
 **Success Criteria:**
 1. `bun run build` produces working CLI binary
@@ -122,4 +122,4 @@ All 24 v1 requirements mapped. 0 unmapped.
 
 ---
 *Roadmap created: 2026-03-31*
-*Last updated: 2026-03-31 after Phase 1 planning*
+*Last updated: 2026-03-31 after Phase 1 Plan 02 completion (Phase 1 complete)*

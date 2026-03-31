@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-last_updated: "2026-03-31T18:55:00Z"
+last_updated: "2026-03-31T19:35:00Z"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State: AI Ark CLI
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 
 | Phase | Status | Plans | Progress |
 |-------|--------|-------|----------|
-| 1 | ◑ | 1/2 | 50% |
+| 1 | ● | 2/2 | 100% |
 | 2 | ○ | 0/0 | 0% |
 | 3 | ○ | 0/0 | 0% |
 | 4 | ○ | 0/0 | 0% |
@@ -34,16 +34,16 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 **Phase 1: Foundation**
 
 - Goal: Bun + TypeScript project with typed API client, auth, rate limiting, and CLI scaffold
-- Status: In progress (Plan 01 complete)
-- Current Plan: 2/2
-- Next action: `/gsd:execute-phase 1` (Plan 02)
+- Status: Complete (both plans done)
+- Current Plan: 2/2 (complete)
+- Next action: `/gsd:transition` to Phase 2
 
 ## Decisions
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
 | 2026-03-31 | Commander for CLI framework | Well-typed, zero deps, Bun-compatible |
-| 2026-03-31 | API key check at program startup | Fast-fail UX, clear error message before any command runs |
+| 2026-03-31 | API key check moved to per-command (not startup) | Each command owns its own error path; --help works without a key set |
 | 2026-03-31 | Barrel type export via src/types/api.ts | Single import path for all API types across the codebase |
 | 2026-03-31 | ExportStatistics state union covers both doc sets | PENDING/PROCESSING from submit endpoint + IN_PROGRESS/DONE/FAILED from statistics endpoint |
 
@@ -52,6 +52,7 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 | Phase | Plan | Duration | Tasks | Files |
 |-------|------|----------|-------|-------|
 | 01-foundation | 01 | 25min | 2 | 9 |
+| 01-foundation | 02 | 10min | 2 | 5 |
 
 ## Notes
 
@@ -62,4 +63,4 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 - Existing Python implementation at lg-data/skills/ai-ark-enrich/ for reference
 
 ---
-*Last updated: 2026-03-31 after Plan 01 execution*
+*Last updated: 2026-03-31 after Plan 02 execution (Phase 01 complete)*
