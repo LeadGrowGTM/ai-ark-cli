@@ -6,6 +6,8 @@
 
 import { Command } from "commander";
 import { createClient, AiArkApiError, pollUntilDone } from "../client/index.js";
+import { formatOutput, pushToClay } from "../io/index.js";
+import type { OutputFormat } from "../io/index.js";
 import type {
   EmailFinderRequest,
   EmailFinderStatistics,
@@ -17,10 +19,13 @@ export function peopleFindEmailsCommand(): Command {
   return new Command("find-emails")
     .description("Find emails from search track ID")
     .requiredOption("--track-id <id>", "Track ID from a people search response")
+    .option("--format <type>", "Output format: json, csv, table", "json")
+    .option("--clay-table <id>", "Push results to a Clay table")
     .option("--no-wait", "Return immediately without polling")
     .action(async (opts) => {
       try {
         const client = createClient();
+        const format = opts.format as OutputFormat;
 
         const body: EmailFinderRequest = {
           trackId: opts.trackId,
@@ -30,8 +35,7 @@ export function peopleFindEmailsCommand(): Command {
         const job = await client.post<EmailFinderStatistics>("/people/email-finder", body);
 
         if (!opts.wait) {
-          // --no-wait: just return the initial response
-          console.log(JSON.stringify({ trackId: opts.trackId, state: job.state }, null, 2));
+          formatOutput({ trackId: opts.trackId, state: job.state }, format);
           return;
         }
 
@@ -61,7 +65,10 @@ export function peopleFindEmailsCommand(): Command {
           page++;
         }
 
-        console.log(JSON.stringify(allResults, null, 2));
+        if (opts.clayTable) {
+          pushToClay(opts.clayTable, allResults);
+        }
+        formatOutput(allResults, format);
       } catch (error) {
         if (error instanceof AiArkApiError) {
           console.error(`Error: ${error.message}`);

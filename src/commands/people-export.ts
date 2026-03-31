@@ -6,6 +6,8 @@
 
 import { Command } from "commander";
 import { createClient, AiArkApiError, pollUntilDone } from "../client/index.js";
+import { formatOutput, pushToClay } from "../io/index.js";
+import type { OutputFormat } from "../io/index.js";
 import type {
   ExportPeopleRequest,
   ExportJobResponse,
@@ -24,10 +26,13 @@ export function peopleExportCommand(): Command {
     .option("--department <depts...>", "Filter by department")
     .option("--title <titles...>", "Filter by current title")
     .option("--size <number>", "Max people to export (1-10000)", "100")
+    .option("--format <type>", "Output format: json, csv, table", "json")
+    .option("--clay-table <id>", "Push results to a Clay table")
     .option("--no-wait", "Return trackId immediately without polling")
     .action(async (opts) => {
       try {
         const client = createClient();
+        const format = opts.format as OutputFormat;
 
         const body: ExportPeopleRequest = {
           page: 0,
@@ -71,8 +76,7 @@ export function peopleExportCommand(): Command {
         const job = await client.post<ExportJobResponse>("/people/export", body);
 
         if (!opts.wait) {
-          // --no-wait: just return the trackId
-          console.log(JSON.stringify({ trackId: job.trackId, state: job.state }, null, 2));
+          formatOutput({ trackId: job.trackId, state: job.state }, format);
           return;
         }
 
@@ -102,7 +106,10 @@ export function peopleExportCommand(): Command {
           page++;
         }
 
-        console.log(JSON.stringify(allResults, null, 2));
+        if (opts.clayTable) {
+          pushToClay(opts.clayTable, allResults);
+        }
+        formatOutput(allResults, format);
       } catch (error) {
         if (error instanceof AiArkApiError) {
           console.error(`Error: ${error.message}`);

@@ -1,9 +1,12 @@
 /**
  * Companies search command — POST /companies with account filter flags.
+ * Supports CSV/stdin input for batch processing and multi-format output.
  */
 
 import { Command } from "commander";
 import { createClient, AiArkApiError } from "../client/index.js";
+import { formatOutput, readCsvFile, readStdin, pushToClay } from "../io/index.js";
+import type { OutputFormat } from "../io/index.js";
 import type {
   CompanySearchRequest,
   CompanySearchResponse,
@@ -21,51 +24,73 @@ export function companiesSearchCommand(): Command {
     .option("--employees <range>", "Employee range (e.g. 50-200)")
     .option("--page <number>", "Page number (0-based)", "0")
     .option("--size <number>", "Results per page (1-100)", "10")
+    .option("--format <type>", "Output format: json, csv, table", "json")
+    .option("--input <file>", "CSV file for batch input")
+    .option("--domain-col <name>", "Column name for domain in CSV", "domain")
+    .option("--clay-table <id>", "Push results to a Clay table")
     .action(async (opts) => {
       try {
         const client = createClient();
+        const format = opts.format as OutputFormat;
 
+        // Determine input source
+        let domains: string[] = opts.domain || [];
+
+        if (opts.input) {
+          const records = readCsvFile(opts.input);
+          const col = opts.domainCol;
+          const csvDomains = records.map((r) => r[col]).filter(Boolean);
+          if (csvDomains.length === 0) {
+            console.error(`Error: No values found in column "${col}" of ${opts.input}`);
+            process.exit(1);
+          }
+          domains = [...domains, ...csvDomains];
+        } else if (!process.stdin.isTTY) {
+          const records = await readStdin();
+          const stdinDomains = records.map((r) => r.domain || r.value).filter(Boolean);
+          domains = [...domains, ...stdinDomains];
+        }
+
+        // If we have batch domains, search each one
+        if (domains.length > 1) {
+          const allResults: unknown[] = [];
+          for (const domain of domains) {
+            const body: CompanySearchRequest = {
+              page: parseInt(opts.page, 10),
+              size: parseInt(opts.size, 10),
+              account: { domain: { all: [domain] } },
+            };
+            applyFilters(body, opts);
+            const result = await client.post<CompanySearchResponse>("/companies", body);
+            allResults.push(...result.content);
+          }
+          if (opts.clayTable) {
+            pushToClay(opts.clayTable, allResults);
+          }
+          formatOutput(allResults, format);
+          return;
+        }
+
+        // Single query
         const body: CompanySearchRequest = {
           page: parseInt(opts.page, 10),
           size: parseInt(opts.size, 10),
         };
 
+        if (domains.length === 1) {
+          body.account = { ...body.account, domain: { all: domains } };
+        }
         if (opts.lookalike) {
           body.lookalikeDomains = opts.lookalike;
         }
-
-        // Build account filter from flags
-        const hasAccountFilter =
-          opts.domain || opts.name || opts.industry || opts.location || opts.technology || opts.employees;
-
-        if (hasAccountFilter) {
-          body.account = {};
-
-          if (opts.domain) {
-            body.account.domain = { all: opts.domain };
-          }
-          if (opts.name) {
-            body.account.name = { all: opts.name };
-          }
-          if (opts.industry) {
-            body.account.industries = { any: opts.industry };
-          }
-          if (opts.location) {
-            body.account.location = { any: opts.location };
-          }
-          if (opts.technology) {
-            body.account.technologies = { any: opts.technology };
-          }
-          if (opts.employees) {
-            const [min, max] = opts.employees.split("-").map(Number);
-            if (!isNaN(min) && !isNaN(max)) {
-              body.account.employeeSize = { all: [[min, max]] };
-            }
-          }
-        }
+        applyFilters(body, opts);
 
         const result = await client.post<CompanySearchResponse>("/companies", body);
-        console.log(JSON.stringify(result, null, 2));
+
+        if (opts.clayTable) {
+          pushToClay(opts.clayTable, result.content);
+        }
+        formatOutput(format === "json" ? result : result.content, format);
       } catch (error) {
         if (error instanceof AiArkApiError) {
           console.error(`Error: ${error.message}`);
@@ -79,4 +104,26 @@ export function companiesSearchCommand(): Command {
         process.exit(1);
       }
     });
+}
+
+function applyFilters(body: CompanySearchRequest, opts: Record<string, unknown>): void {
+  const name = opts.name as string[] | undefined;
+  const industry = opts.industry as string[] | undefined;
+  const location = opts.location as string[] | undefined;
+  const technology = opts.technology as string[] | undefined;
+  const employees = opts.employees as string | undefined;
+
+  if (name || industry || location || technology || employees) {
+    body.account = body.account || {};
+    if (name) body.account.name = { all: name };
+    if (industry) body.account.industries = { any: industry };
+    if (location) body.account.location = { any: location };
+    if (technology) body.account.technologies = { any: technology };
+    if (employees) {
+      const [min, max] = employees.split("-").map(Number);
+      if (!isNaN(min) && !isNaN(max)) {
+        body.account.employeeSize = { all: [[min, max]] };
+      }
+    }
+  }
 }

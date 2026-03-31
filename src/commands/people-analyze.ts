@@ -5,6 +5,8 @@
 
 import { Command } from "commander";
 import { createClient, AiArkApiError } from "../client/index.js";
+import { formatOutput } from "../io/index.js";
+import type { OutputFormat } from "../io/index.js";
 import type {
   PersonalityAnalysisRequest,
   PersonalityAnalysisResponse,
@@ -14,9 +16,11 @@ export function peopleAnalyzeCommand(): Command {
   return new Command("analyze")
     .description("AI personality analysis")
     .requiredOption("--linkedin <url>", "LinkedIn profile URL to analyze")
+    .option("--format <type>", "Output format: json, csv, table", "json")
     .action(async (opts) => {
       try {
         const client = createClient();
+        const format = opts.format as OutputFormat;
 
         const body: PersonalityAnalysisRequest = {
           url: opts.linkedin,
@@ -26,7 +30,7 @@ export function peopleAnalyzeCommand(): Command {
           "/people/analysis",
           body,
         );
-        console.log(JSON.stringify(result, null, 2));
+        formatOutput(result, format);
       } catch (error) {
         if (error instanceof AiArkApiError) {
           console.error(`Error: ${error.message}`);

@@ -5,6 +5,8 @@
 
 import { Command } from "commander";
 import { createClient, AiArkApiError } from "../client/index.js";
+import { formatOutput } from "../io/index.js";
+import type { OutputFormat } from "../io/index.js";
 import type {
   ReverseLookupRequest,
   ReverseLookupResponse,
@@ -14,9 +16,12 @@ export function peopleLookupCommand(): Command {
   return new Command("lookup")
     .description("Reverse lookup by email or phone")
     .requiredOption("--email <email>", "Email address to look up")
+    .option("--format <type>", "Output format: json, csv, table", "json")
+    .option("--clay-table <id>", "Push results to a Clay table")
     .action(async (opts) => {
       try {
         const client = createClient();
+        const format = opts.format as OutputFormat;
 
         const body: ReverseLookupRequest = {
           kind: "CONTACT",
@@ -27,7 +32,12 @@ export function peopleLookupCommand(): Command {
           "/people/reverse-lookup",
           body,
         );
-        console.log(JSON.stringify(result, null, 2));
+
+        if (opts.clayTable) {
+          const { pushToClay } = await import("../io/index.js");
+          pushToClay(opts.clayTable, [result]);
+        }
+        formatOutput(result, format);
       } catch (error) {
         if (error instanceof AiArkApiError) {
           console.error(`Error: ${error.message}`);

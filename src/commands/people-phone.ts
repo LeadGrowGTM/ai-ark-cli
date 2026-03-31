@@ -5,6 +5,8 @@
 
 import { Command } from "commander";
 import { createClient, AiArkApiError } from "../client/index.js";
+import { formatOutput } from "../io/index.js";
+import type { OutputFormat } from "../io/index.js";
 import type {
   MobilePhoneRequest,
   MobilePhoneResponse,
@@ -17,6 +19,8 @@ export function peoplePhoneCommand(): Command {
     .option("--domain <domain>", "Company domain (use with --name)")
     .option("--name <name>", "Person full name (use with --domain)")
     .option("--type <type>", "Phone type to find", "personal")
+    .option("--format <type>", "Output format: json, csv, table", "json")
+    .option("--clay-table <id>", "Push results to a Clay table")
     .action(async (opts) => {
       try {
         if (!opts.linkedin && !(opts.domain && opts.name)) {
@@ -25,6 +29,7 @@ export function peoplePhoneCommand(): Command {
         }
 
         const client = createClient();
+        const format = opts.format as OutputFormat;
 
         const body: MobilePhoneRequest = {
           type: opts.type,
@@ -44,7 +49,12 @@ export function peoplePhoneCommand(): Command {
           "/people/mobile-phone-finder",
           body,
         );
-        console.log(JSON.stringify(result, null, 2));
+
+        if (opts.clayTable) {
+          const { pushToClay } = await import("../io/index.js");
+          pushToClay(opts.clayTable, result.phones);
+        }
+        formatOutput(format === "json" ? result : result.phones, format);
       } catch (error) {
         if (error instanceof AiArkApiError) {
           console.error(`Error: ${error.message}`);
