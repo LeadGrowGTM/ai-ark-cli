@@ -1,0 +1,154 @@
+{
+  "content": [
+    {
+      "id": "53a0efdf-0f30-2f95-79de-4d824340be85",
+      "identifier": "mitchell-keller",
+      "profile": {
+        "first_name": "Mitchell",
+        "last_name": "Keller",
+        "full_name": "Mitchell Keller",
+        "headline": "Co-Founder & Head of Growth at LeadGrow.ai",
+        "title": "Co-Founder & Head of Growth",
+        "picture": {
+          "source": "https://images.ai-ark.com/..."
+        },
+        "background": {
+          "source": "https://media.licdn.com/..."
+        },
+        "birth_date": "1600-10-03",
+        "summary": "..."
+      },
+      "link": {
+        "linkedin": "https://www.linkedin.com/in/mitchell-keller",
+        "twitter": "https://x.com/truckit365",
+        "github": null,
+        "facebook": null
+      },
+      "location": {
+        "default": "Greater Oshawa Metropolitan Area, Canada, North America",
+        "short": "Greater Oshawa Metropolitan Area",
+        "country": "Canada",
+        "state": null,
+        "city": "Greater Oshawa Metropolitan Area",
+        "position": null
+      },
+      "languages": {
+        "primary_locale": { "country": "US", "language": "en" },
+        "supported_locales": [{ "country": "US", "language": "en" }],
+        "profile_languages": null
+      },
+      "industry": "Marketing & Advertising",
+      "educations": [
+        {
+          "school": {
+            "id": "d17e1952-96ed-d9d4-a54a-07d35d2666e2",
+            "name": "Loyalist College",
+            "logo": "https://images.ai-ark.com/...",
+            "url": "https://www.linkedin.com/school/loyalist-college"
+          },
+          "degree_name": "Associate's degree",
+          "field_of_study": "Radiation Protection/Health Physics Technician",
+          "grade": "90",
+          "date": { "start": "2019-09-01", "end": "2020-05-31" }
+        }
+      ],
+      "certifications": [
+        {
+          "name": "Social Media Marketing: ROI",
+          "authority": "LinkedIn",
+          "url": "https://www.linkedin.com/learning/certificates/...",
+          "license_number": null,
+          "display_source": "linkedin.com",
+          "company": {
+            "id": "60ecc6ff-f76b-b973-25ad-8528412a323b",
+            "name": "LinkedIn",
+            "logo": "https://images.ai-ark.com/...",
+            "url": "https://www.linkedin.com/company/linkedin"
+          },
+          "date": { "start": "2022-09-01", "end": null }
+        }
+      ],
+      "position_groups": [
+        {
+          "company": {
+            "id": "ad213228-948c-0f2f-62ad-52000f1952da",
+            "name": "LeadGrow.ai",
+            "logo": "https://images.ai-ark.com/...",
+            "url": "https://www.linkedin.com/company/leadgrow-ai",
+            "employees": { "start": 2, "end": 10 }
+          },
+          "date": { "start": "2023-08-01", "end": null },
+          "profile_positions": [
+            {
+              "company": "LeadGrow.ai",
+              "description": "We help sales teams become predictably busy with programmatic outreach.",
+              "title": "Co-Founder & Head of Growth",
+              "employment_type": "Self-employed",
+              "location": "Toronto, Ontario, Canada",
+              "date": { "start": "2023-08-01", "end": null }
+            }
+          ]
+        }
+      ],
+      "skills": [
+        "Lead Generation", "Strategic Prospecting", "Lead Qualification",
+        "email copywriting", "Artificial Intelligence (AI)", "automations"
+      ],
+      "member_badges": {
+        "premium": true,
+        "creator": true,
+        "open_to_work": false,
+        "hiring": false,
+        "verified": true,
+        "influencer": false
+      },
+      "company": {
+        "id": "ad213228-948c-0f2f-62ad-52000f1952da",
+        "summary": {
+          "name": "LeadGrow.ai",
+          "description": "Become Predictably Busy With Boring Lead Gen Infrastructure",
+          "founded_year": 2023,
+          "type": "PRIVATELY_HELD",
+          "industry": "advertising services",
+          "staff": { "total": 6, "range": { "start": 2, "end": 10 } },
+          "logo": { "source": "https://images.ai-ark.com/..." }
+        },
+        "link": {
+          "website": "https://leadgrow.ai",
+          "domain": "leadgrow.ai",
+          "domain_ltd": "leadgrow.ai",
+          "linkedin": "https://www.linkedin.com/company/leadgrow-ai"
+        },
+        "industries": ["advertising services"],
+        "keywords": ["lead generation", "cold email lead generation", "cold email"],
+        "languages": ["english"],
+        "last_updated": "2026-03-15"
+      },
+      "department": {
+        "departments": ["master_marketing", "master_sales"],
+        "sub_departments": ["founder", "business_development"],
+        "functions": ["marketing", "sales", "entrepreneurship", "business_development"],
+        "seniority": "founder"
+      },
+      "last_updated": "2026-03-15"
+    }
+  ],
+  "size": 3,
+  "totalElements": 1,
+  "pageable": {
+    "pageNumber": 0,
+    "pageSize": 3,
+    "sort": { "empty": false, "sorted": true, "unsorted": false },
+    "offset": 0,
+    "paged": true,
+    "unpaged": false
+  },
+  "last": true,
+  "totalPages": 1,
+  "sort": { "empty": false, "sorted": true, "unsorted": false },
+  "numberOfElements": 1,
+  "trackId": "d3146605-4f20-460d-994a-5b8939dd4953",
+  "number": 0,
+  "first": true,
+  "empty": false
+}

@@ -1,0 +1,56 @@
+{
+  "content": [
+    {
+      "id": "ad213228-948c-0f2f-62ad-52000f1952da",
+      "summary": {
+        "name": "LeadGrow.ai",
+        "description": "Become Predictably Busy With Boring Lead Gen Infrastructure",
+        "founded_year": 2023,
+        "type": "PRIVATELY_HELD",
+        "industry": "advertising services",
+        "staff": {
+          "total": 6,
+          "range": { "start": 2, "end": 10 }
+        },
+        "logo": {
+          "source": "https://images.ai-ark.com/..."
+        }
+      },
+      "link": {
+        "website": "https://leadgrow.ai",
+        "domain": "leadgrow.ai",
+        "domain_ltd": "leadgrow.ai",
+        "linkedin": "https://www.linkedin.com/company/leadgrow-ai"
+      },
+      "industries": ["advertising services"],
+      "keywords": [
+        "lead generation",
+        "cold email lead generation",
+        "cold email",
+        "cold email consults",
+        "b2b rev gen",
+        "dtc opportunity gen",
+        "appointment setting"
+      ],
+      "languages": ["english"],
+      "last_updated": "2026-03-15"
+    }
+  ],
+  "pageable": {
+    "pageNumber": 0,
+    "pageSize": 1,
+    "sort": { "empty": false, "sorted": true, "unsorted": false },
+    "offset": 0,
+    "paged": true,
+    "unpaged": false
+  },
+  "totalPages": 1,
+  "last": true,
+  "totalElements": 1,
+  "size": 1,
+  "number": 0,
+  "sort": { "empty": false, "sorted": true, "unsorted": false },
+  "first": true,
+  "numberOfElements": 1,
+  "empty": false
+}
