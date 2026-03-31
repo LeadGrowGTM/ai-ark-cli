@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-03-31T20:38:08.164Z",
+  "phase": "01",
+  "phase_name": "foundation",
+  "phase_dir": ".planning/phases/01-foundation",
+  "plan": null,
+  "task": null,
+  "total_tasks": 4,
+  "status": "phase_complete",
+  "completed_tasks": [
+    {"id": 1, "name": "Project scaffold (package.json, tsconfig, CLI entry)", "status": "done", "commit": "6f4687b"},
+    {"id": 2, "name": "TypeScript types for all 14 API schemas", "status": "done", "commit": "586dde0"},
+    {"id": 3, "name": "HTTP client with auth, rate limiter, error handling", "status": "done", "commit": "823a6f2"},
+    {"id": 4, "name": "Credits command + CLI help finalization", "status": "done", "commit": "4c89fab"}
+  ],
+  "remaining_tasks": [],
+  "blockers": [],
+  "human_actions_pending": [
+    {"action": "Run `AI_ARK_API_KEY=<key> bun dist/index.js credits` to confirm live API auth works", "context": "Verifier marked as human_needed — can't test without real API key", "blocking": false},
+    {"action": "Burst-test rate limiter (6 rapid acquire() calls, 6th should wait ~1s)", "context": "Runtime timing verification — logic is correct but untested under load", "blocking": false}
+  ],
+  "decisions": [
+    {"decision": "Removed startup API key guard from index.ts", "rationale": "Blocked --help from working without a key. Per-command error handling is cleaner.", "phase": "01"},
+    {"decision": "Used Commander.js for CLI framework", "rationale": "Mature, typed, standard for Node/Bun CLIs", "phase": "01"},
+    {"decision": "3-tier token bucket rate limiter (not sliding window)", "rationale": "Simpler, matches API's burst/sustained/hourly limits directly", "phase": "01"}
+  ],
+  "uncommitted_files": [".planning/STATE.md"],
+  "next_action": "/gsd:plan-phase 2 — plan the 6 core sync command implementations",
+  "context_notes": "Phase 1 complete and verified. All automated checks pass. Phase 2 adds the 6 sync endpoint commands (companies search, people search/lookup/phone/analyze, credits already done). The typed client + rate limiter from Phase 1 means each new command is just a thin wrapper calling client.post() with the right types."
+}
