@@ -1,11 +1,12 @@
 #!/usr/bin/env bun
 import { Command } from "commander";
+import { creditsCommand } from "./commands/credits.js";
 
-// Validate API key is available (warn early, not on every command)
-if (!process.env.AI_ARK_API_KEY) {
-  console.error("Error: AI_ARK_API_KEY environment variable is not set");
+// Global error handler for uncaught exceptions
+process.on("uncaughtException", (error: Error) => {
+  console.error(`Error: ${error.message}`);
   process.exit(1);
-}
+});
 
 const program = new Command();
 
@@ -15,22 +16,16 @@ program
   .version("0.1.0");
 
 // Credits command
-program
-  .command("credits")
-  .description("Check account credit balance")
-  .action(() => {
-    console.error("Not implemented yet");
-    process.exit(1);
-  });
+program.addCommand(creditsCommand());
 
 // Companies command group
 const companies = program
   .command("companies")
-  .description("Search 69M+ company profiles");
+  .description("Company search and lookup");
 
 companies
   .command("search")
-  .description("Search companies by filters")
+  .description("Search 69M+ company profiles")
   .action(() => {
     console.error("Not implemented yet");
     process.exit(1);
@@ -39,11 +34,11 @@ companies
 // People command group
 const people = program
   .command("people")
-  .description("Search and enrich 400M+ people profiles");
+  .description("People search, lookup, and enrichment");
 
 people
   .command("search")
-  .description("Search people by account and contact filters")
+  .description("Search 400M+ people profiles")
   .action(() => {
     console.error("Not implemented yet");
     process.exit(1);
@@ -51,7 +46,7 @@ people
 
 people
   .command("lookup")
-  .description("Reverse people lookup by email or phone")
+  .description("Reverse lookup by email or phone")
   .action(() => {
     console.error("Not implemented yet");
     process.exit(1);
@@ -67,7 +62,7 @@ people
 
 people
   .command("analyze")
-  .description("AI personality analysis from LinkedIn profile")
+  .description("AI personality analysis")
   .action(() => {
     console.error("Not implemented yet");
     process.exit(1);
@@ -75,7 +70,7 @@ people
 
 people
   .command("export")
-  .description("Async bulk export with email discovery (max 10K)")
+  .description("Bulk export with email discovery")
   .action(() => {
     console.error("Not implemented yet");
     process.exit(1);
@@ -83,7 +78,7 @@ people
 
 people
   .command("find-emails")
-  .description("Find emails by people search track ID")
+  .description("Find emails from search track ID")
   .action(() => {
     console.error("Not implemented yet");
     process.exit(1);
