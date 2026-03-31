@@ -75,6 +75,9 @@ Plans:
 
 **UI hint**: no
 
+Plans:
+- [x] 03-01 — Shared poller + export + find-emails commands with --no-wait
+
 **Success Criteria:**
 1. `ai-ark people export --domain example.com --seniority director` submits job, shows progress bar, returns results when done
 2. `ai-ark people find-emails --track-id <id>` triggers email finding, polls, returns verified emails
@@ -125,4 +128,4 @@ All 24 v1 requirements mapped. 0 unmapped.
 
 ---
 *Roadmap created: 2026-03-31*
-*Last updated: 2026-03-31 after Phase 2 completion*
+*Last updated: 2026-03-31 after Phase 3 completion*

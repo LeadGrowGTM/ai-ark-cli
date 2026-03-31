@@ -31,10 +31,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Async Export Commands
 
-- [ ] **ASYNC-01**: `ai-ark people export` submits export-with-email job, auto-polls until done, fetches and outputs results
-- [ ] **ASYNC-02**: `ai-ark people find-emails` submits email finder from trackId, auto-polls until done, fetches and outputs results
-- [ ] **ASYNC-03**: Progress display during polling shows state, total, found counts with elapsed time
-- [ ] **ASYNC-04**: Both async commands support --no-wait flag to return trackId immediately for manual management
+- [x] **ASYNC-01**: `ai-ark people export` submits export-with-email job, auto-polls until done, fetches and outputs results
+- [x] **ASYNC-02**: `ai-ark people find-emails` submits email finder from trackId, auto-polls until done, fetches and outputs results
+- [x] **ASYNC-03**: Progress display during polling shows state, total, found counts with elapsed time
+- [x] **ASYNC-04**: Both async commands support --no-wait flag to return trackId immediately for manual management
 
 ### Input Handling
 
@@ -94,10 +94,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CMD-04 | Phase 2 | Complete (02-01) |
 | CMD-05 | Phase 2 | Complete (02-01) |
 | CMD-06 | Phase 1 | Complete (01-02) |
-| ASYNC-01 | Phase 3 | Pending |
-| ASYNC-02 | Phase 3 | Pending |
-| ASYNC-03 | Phase 3 | Pending |
-| ASYNC-04 | Phase 3 | Pending |
+| ASYNC-01 | Phase 3 | Complete (03-01) |
+| ASYNC-02 | Phase 3 | Complete (03-01) |
+| ASYNC-03 | Phase 3 | Complete (03-01) |
+| ASYNC-04 | Phase 3 | Complete (03-01) |
 | INPUT-01 | Phase 4 | Pending |
 | INPUT-02 | Phase 4 | Pending |
 | INPUT-03 | Phase 4 | Pending |
@@ -113,4 +113,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-31*
-*Last updated: 2026-03-31 after Phase 2 completion*
+*Last updated: 2026-03-31 after Phase 3 completion*
