@@ -38,16 +38,16 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Input Handling
 
-- [ ] **INPUT-01**: CSV file input via --input flag with configurable column mapping (--domain-col, --name-col, etc.)
-- [ ] **INPUT-02**: Stdin/pipe input for tool chaining (reads JSON or newline-delimited values)
-- [ ] **INPUT-03**: Inline filter flags for ad-hoc queries (--domain, --industry, --seniority, --title, etc.)
+- [x] **INPUT-01**: CSV file input via --input flag with configurable column mapping (--domain-col, --name-col, etc.)
+- [x] **INPUT-02**: Stdin/pipe input for tool chaining (reads JSON or newline-delimited values)
+- [x] **INPUT-03**: Inline filter flags for ad-hoc queries (--domain, --industry, --seniority, --title, etc.)
 
 ### Output Handling
 
-- [ ] **OUT-01**: JSON output (default) to stdout for piping
-- [ ] **OUT-02**: CSV output via --format csv flag
-- [ ] **OUT-03**: Console table output via --format table for quick review
-- [ ] **OUT-04**: Direct Clay table push via --clay-table flag (uses Clay CLI under the hood)
+- [x] **OUT-01**: JSON output (default) to stdout for piping
+- [x] **OUT-02**: CSV output via --format csv flag
+- [x] **OUT-03**: Console table output via --format table for quick review
+- [x] **OUT-04**: Direct Clay table push via --clay-table flag (uses Clay CLI under the hood)
 
 ## v2 Requirements
 
@@ -98,13 +98,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ASYNC-02 | Phase 3 | Complete (03-01) |
 | ASYNC-03 | Phase 3 | Complete (03-01) |
 | ASYNC-04 | Phase 3 | Complete (03-01) |
-| INPUT-01 | Phase 4 | Pending |
-| INPUT-02 | Phase 4 | Pending |
-| INPUT-03 | Phase 4 | Pending |
-| OUT-01 | Phase 4 | Pending |
-| OUT-02 | Phase 4 | Pending |
-| OUT-03 | Phase 4 | Pending |
-| OUT-04 | Phase 4 | Pending |
+| INPUT-01 | Phase 4 | Complete (04-01) |
+| INPUT-02 | Phase 4 | Complete (04-01) |
+| INPUT-03 | Phase 4 | Complete (04-01) |
+| OUT-01 | Phase 4 | Complete (04-01) |
+| OUT-02 | Phase 4 | Complete (04-01) |
+| OUT-03 | Phase 4 | Complete (04-01) |
+| OUT-04 | Phase 4 | Complete (04-01) |
 
 **Coverage:**
 - v1 requirements: 24 total
@@ -113,4 +113,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-31*
-*Last updated: 2026-03-31 after Phase 3 completion*
+*Last updated: 2026-03-31 after Phase 4 completion — ALL v1 REQUIREMENTS COMPLETE*

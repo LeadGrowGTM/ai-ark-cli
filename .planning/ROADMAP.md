@@ -99,6 +99,9 @@ Plans:
 
 **UI hint**: no
 
+Plans:
+- [x] 04-01 — I/O modules (formatters, CSV reader, stdin reader, Clay push) + wired into all commands
+
 **Success Criteria:**
 1. `ai-ark people search --input companies.csv --domain-col Website` reads CSV and searches each domain
 2. `echo '{"domain":"leadgrow.ai"}' | ai-ark people search` accepts piped JSON input
@@ -128,4 +131,4 @@ All 24 v1 requirements mapped. 0 unmapped.
 
 ---
 *Roadmap created: 2026-03-31*
-*Last updated: 2026-03-31 after Phase 3 completion*
+*Last updated: 2026-03-31 — ALL 4 PHASES COMPLETE, v1.0 DONE*
