@@ -14,5 +14,9 @@ export type ApiEndpoint =
   | "/people/mobile-phone-finder"
   | "/people/analysis"
   | "/people/export"
+  | `/people/export/${string}/inquiries`
+  | `/people/export/${string}/inquiries/statistics`
   | "/people/email-finder"
+  | `/people/email-finder/${string}/statistics`
+  | `/people/email-finder/${string}/inquiries`
   | "/payments/credits";

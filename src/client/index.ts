@@ -4,4 +4,6 @@
 
 export { AiArkClient, AiArkApiError, createClient } from "./http.js";
 export { RateLimiter } from "./rate-limiter.js";
+export { pollUntilDone } from "./poller.js";
 export type { RateLimitTier } from "./rate-limiter.js";
+export type { PollResult } from "./poller.js";

@@ -146,4 +146,5 @@ export interface ExportPeopleRequest {
 /** POST /people/email-finder */
 export interface EmailFinderRequest {
   trackId: string;
+  webhook?: string;
 }

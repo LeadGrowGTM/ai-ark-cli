@@ -6,6 +6,8 @@ import { peopleSearchCommand } from "./commands/people-search.js";
 import { peopleLookupCommand } from "./commands/people-lookup.js";
 import { peoplePhoneCommand } from "./commands/people-phone.js";
 import { peopleAnalyzeCommand } from "./commands/people-analyze.js";
+import { peopleExportCommand } from "./commands/people-export.js";
+import { peopleFindEmailsCommand } from "./commands/people-find-emails.js";
 
 // Global error handler for uncaught exceptions
 process.on("uncaughtException", (error: Error) => {
@@ -39,22 +41,7 @@ people.addCommand(peopleSearchCommand());
 people.addCommand(peopleLookupCommand());
 people.addCommand(peoplePhoneCommand());
 people.addCommand(peopleAnalyzeCommand());
-
-// Async commands (Phase 3 — not yet implemented)
-people
-  .command("export")
-  .description("Bulk export with email discovery")
-  .action(() => {
-    console.error("Not implemented yet");
-    process.exit(1);
-  });
-
-people
-  .command("find-emails")
-  .description("Find emails from search track ID")
-  .action(() => {
-    console.error("Not implemented yet");
-    process.exit(1);
-  });
+people.addCommand(peopleExportCommand());
+people.addCommand(peopleFindEmailsCommand());
 
 program.parse();
