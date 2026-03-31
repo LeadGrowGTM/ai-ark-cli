@@ -9,7 +9,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Project Setup
 
-- [ ] **SETUP-01**: Project initializes with Bun + TypeScript, builds to single executable CLI binary
+- [x] **SETUP-01**: Project initializes with Bun + TypeScript, builds to single executable CLI binary
 - [ ] **SETUP-02**: CLI reads API key from AI_ARK_API_KEY environment variable
 - [ ] **SETUP-03**: CLI displays help text with all available commands and options
 
@@ -17,7 +17,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **API-01**: Typed HTTP client with X-TOKEN auth header for all AI Ark endpoints
 - [ ] **API-02**: Rate limiter enforces 5 req/sec, 300/min, 18K/hr globally across all commands
-- [ ] **API-03**: Full TypeScript types for all 14 API request/response schemas (derived from real response examples)
+- [x] **API-03**: Full TypeScript types for all 14 API request/response schemas (derived from real response examples)
 - [ ] **API-04**: Error handling surfaces API error messages clearly (status code, message, path)
 
 ### Core Commands
@@ -81,12 +81,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SETUP-01 | Phase 1 | Pending |
+| SETUP-01 | Phase 1 | Complete (01-01) |
 | SETUP-02 | Phase 1 | Pending |
 | SETUP-03 | Phase 1 | Pending |
 | API-01 | Phase 1 | Pending |
 | API-02 | Phase 1 | Pending |
-| API-03 | Phase 1 | Pending |
+| API-03 | Phase 1 | Complete (01-01) |
 | API-04 | Phase 1 | Pending |
 | CMD-01 | Phase 2 | Pending |
 | CMD-02 | Phase 2 | Pending |

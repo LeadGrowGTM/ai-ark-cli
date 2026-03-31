@@ -26,7 +26,7 @@
 **Plans:** 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Project scaffold + TypeScript types for all 14 API schemas
+- [x] 01-01-PLAN.md — Project scaffold + TypeScript types for all 14 API schemas
 - [ ] 01-02-PLAN.md — HTTP client with auth, rate limiter, error handling, and credits command
 
 **Success Criteria:**
