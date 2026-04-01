@@ -61,7 +61,7 @@ export function peopleSearchCommand(): Command {
             const body: PeopleSearchRequest = {
               page: parseInt(opts.page, 10),
               size: parseInt(opts.size, 10),
-              account: { domain: { all: [domain] } },
+              account: { domain: { all: { include: [domain] } } },
             };
             applyContactFilters(body, opts);
             const result = await client.post<PeopleSearchResponse>("/people", body);
@@ -85,13 +85,13 @@ export function peopleSearchCommand(): Command {
         if (hasAccount) {
           body.account = {};
           if (domains.length > 0) {
-            body.account.domain = { all: domains };
+            body.account.domain = { all: { include: domains } };
           }
           if (opts.company) {
-            body.account.name = { all: opts.company };
+            body.account.name = { any: { include: opts.company as string[] } };
           }
           if (opts.industry) {
-            body.account.industries = { any: opts.industry };
+            body.account.industries = { any: { include: opts.industry as string[] } };
           }
         }
 
@@ -130,12 +130,12 @@ function applyContactFilters(body: PeopleSearchRequest, opts: Record<string, unk
   const hasContact = location || seniority || department || title || name || skills || linkedin;
   if (hasContact) {
     body.contact = {};
-    if (location) body.contact.location = { any: location };
-    if (seniority) body.contact.seniority = { any: seniority };
-    if (department) body.contact.department = { any: department };
-    if (title) body.contact.experience = { currentTitle: { any: title } };
-    if (name) body.contact.fullName = { any: name };
-    if (skills) body.contact.skills = { any: skills };
-    if (linkedin) body.contact.linkedin = { all: linkedin };
+    if (location) body.contact.location = { any: { include: location } };
+    if (seniority) body.contact.seniority = { any: { include: seniority } };
+    if (department) body.contact.department = { any: { include: department } };
+    if (title) body.contact.experience = { currentTitle: { any: { include: title } } };
+    if (name) body.contact.fullName = { any: { include: name } };
+    if (skills) body.contact.skills = { any: { include: skills } };
+    if (linkedin) body.contact.linkedin = { all: { include: linkedin } };
   }
 }

@@ -44,13 +44,13 @@ export function peopleExportCommand(): Command {
         if (hasAccount) {
           body.account = {};
           if (opts.domain) {
-            body.account.domain = { all: opts.domain };
+            body.account.domain = { all: { include: opts.domain as string[] } };
           }
           if (opts.company) {
-            body.account.name = { all: opts.company };
+            body.account.name = { any: { include: opts.company as string[] } };
           }
           if (opts.industry) {
-            body.account.industries = { any: opts.industry };
+            body.account.industries = { any: { include: opts.industry as string[] } };
           }
         }
 
@@ -59,16 +59,16 @@ export function peopleExportCommand(): Command {
         if (hasContact) {
           body.contact = {};
           if (opts.location) {
-            body.contact.location = { any: opts.location };
+            body.contact.location = { any: { include: opts.location as string[] } };
           }
           if (opts.seniority) {
-            body.contact.seniority = { any: opts.seniority };
+            body.contact.seniority = { any: { include: opts.seniority as string[] } };
           }
           if (opts.department) {
-            body.contact.department = { any: opts.department };
+            body.contact.department = { any: { include: opts.department as string[] } };
           }
           if (opts.title) {
-            body.contact.experience = { currentTitle: { any: opts.title } };
+            body.contact.experience = { currentTitle: { any: { include: opts.title as string[] } } };
           }
         }
 

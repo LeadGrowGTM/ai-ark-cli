@@ -56,11 +56,21 @@ export interface PaginatedPeopleResponse<T> extends PaginatedResponse<T> {
 
 // ---------------------------------------------------------------------------
 // Filter types
+//
+// The API uses a nested filter structure:
+//   { all: { include: string[] }, any: { include: string[] } }
+//
+// NOT the flat array format { all: string[] } — that causes 400 errors.
 // ---------------------------------------------------------------------------
 
+export interface FilterCondition {
+  include?: string[];
+  exclude?: string[];
+}
+
 export interface FilterWithAllAny {
-  all?: string[];
-  any?: string[];
+  all?: FilterCondition;
+  any?: FilterCondition;
 }
 
 export interface FilterWithAllAnyPlusSearchMatch extends FilterWithAllAny {

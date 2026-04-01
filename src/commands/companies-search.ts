@@ -58,7 +58,7 @@ export function companiesSearchCommand(): Command {
             const body: CompanySearchRequest = {
               page: parseInt(opts.page, 10),
               size: parseInt(opts.size, 10),
-              account: { domain: { all: [domain] } },
+              account: { domain: { all: { include: [domain] } } },
             };
             applyFilters(body, opts);
             const result = await client.post<CompanySearchResponse>("/companies", body);
@@ -78,7 +78,7 @@ export function companiesSearchCommand(): Command {
         };
 
         if (domains.length === 1) {
-          body.account = { ...body.account, domain: { all: domains } };
+          body.account = { ...body.account, domain: { all: { include: domains } } };
         }
         if (opts.lookalike) {
           body.lookalikeDomains = opts.lookalike;
@@ -115,10 +115,10 @@ function applyFilters(body: CompanySearchRequest, opts: Record<string, unknown>)
 
   if (name || industry || location || technology || employees) {
     body.account = body.account || {};
-    if (name) body.account.name = { all: name };
-    if (industry) body.account.industries = { any: industry };
-    if (location) body.account.location = { any: location };
-    if (technology) body.account.technologies = { any: technology };
+    if (name) body.account.name = { any: { include: name } };
+    if (industry) body.account.industries = { any: { include: industry } };
+    if (location) body.account.location = { any: { include: location } };
+    if (technology) body.account.technologies = { any: { include: technology } };
     if (employees) {
       const [min, max] = employees.split("-").map(Number);
       if (!isNaN(min) && !isNaN(max)) {
