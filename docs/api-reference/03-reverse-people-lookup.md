@@ -1,44 +1,41 @@
-# Reverse People Lookup API
+# AI Ark People Reverse Lookup API
 
 **Endpoint:** `POST https://api.ai-ark.com/api/developer-portal/v1/people/reverse-lookup`
 
-**Description:** Searches for individuals using contact information such as email addresses or phone numbers.
-
-## Rate Limits
-
-- 5 requests per second
-- 300 per minute
-- 18,000 per hour
-
-## Authentication
-
-Header-based authentication required.
-
-**Required Header:** `Content-Type: application/json`
-
 ## Request Body
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `kind` | string | Yes | Search type specification (e.g., "CONTACT") |
-| `search` | string | Yes | The contact information to search for (email address or phone number) |
-
-## Example Request
 
 ```json
 {
-  "kind": "CONTACT",
-  "search": "john@example.com"
+  "search": "email@example.com"
 }
 ```
 
-## Response
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `search` | string | Yes | Email address, phone number, or other contact info |
 
-### 200 Success
+## Auth
 
-Returns matching person records based on the contact lookup criteria provided.
+Header: `X-TOKEN: {api-key}`
 
-### 404 Not Found
+## Response (200)
+
+Returns full person profile with:
+- `id`, `identifier`
+- `profile`: first_name, last_name, full_name, headline, title, picture, summary
+- `link`: linkedin, twitter, github, facebook
+- `location`: country, state, city, position
+- `languages`: primary_locale, supported_locales, profile_languages
+- `industry`
+- `educations[]`: school, degree_name, field_of_study, date
+- `certifications[]`: name, authority, company, date
+- `position_groups[]`: company (with employees range), profile_positions[]
+- `skills[]`: string array
+- `member_badges`: creator, hiring, open_to_work, premium
+- `company`: full company object with summary, link, financial, location, technologies[], industries[]
+- `department`: departments[], sub_departments[], functions[], seniority
+
+## Response (404)
 
 ```json
 {
@@ -48,3 +45,7 @@ Returns matching person records based on the contact lookup criteria provided.
   "path": ""
 }
 ```
+
+## Rate Limits
+
+5 requests/second, 300/minute, 18,000/hour

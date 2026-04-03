@@ -1,95 +1,86 @@
-# Export People with Email API
+# AI Ark People Export with Email API
 
 **Endpoint:** `POST https://api.ai-ark.com/api/developer-portal/v1/people/export`
 
-**Description:** Facilitates asynchronous export of individuals matching specified filters, including email discovery. Processes requests asynchronously and delivers results via webhook notification upon completion.
-
-## Rate Limits
-
-- 5 requests per second
-- 300 per minute
-- 18,000 per hour
-
-## Authentication
-
-Header-based authentication required.
-
-**Required Header:** `Content-Type: application/json`
-
-## Key Constraints
-
-- **Maximum results per export:** 10,000 people (size parameter capped at 10,000)
-- **Error on exceeding limit:** Returns `400 Bad Request - pagination limit exceeded`
-- **Email verification:** All returned emails are verified in real time by BounceBan
-- **Webhook retries:** Automatic retry up to 30 times; manual re-trigger available via resend endpoint
+Async endpoint. Same filters as People Search. All emails verified by BounceBan.
 
 ## Request Body
 
-### Required Fields
+```json
+{
+  "account": {
+    "employeeSize": {
+      "type": "RANGE",
+      "range": [{ "start": 10, "end": 50 }]
+    }
+  },
+  "page": 0,
+  "size": 25,
+  "webhook": "https://your-webhook-url.com"
+}
+```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `page` | integer | Zero-based page number |
-| `size` | integer | Results per page (0-10,000 maximum) |
+## Parameters
 
-### Optional Fields
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `account` | AccountFilter | No | Company-level filters |
+| `contact` | ContactFilter | No | Contact-level filters |
+| `page` | integer | Yes | Page number (zero-based) |
+| `size` | integer | Yes | 1-10000 (max with email) |
+| `webhook` | string (URI) | Yes | Webhook URL for async results |
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `webhook` | string | URL to receive POST notification upon completion |
+## Filters
 
-### Account Filters
+Uses SAME filter structure as People Search:
 
-Same structure as People Search API:
+**Account filters (SearchMatch):** name, url, industries, technologies, keyword, productAndServices
+```json
+{ "any": { "mode": "SMART", "content": ["value"] } }
+```
 
-- `domain`, `linkedin`, `url`, `name`, `socialMediaLink`, `phoneNumber`
-- `industries`, `location`, `productAndServices`, `socialMedia`, `type`
-- `foundedYear`, `employeeSize`, `revenue`, `language`, `geoLocation`
-- `keyword`, `funding`, `metric`, `technology`, `technologies`, `naics`
+**Account filters (AllAny):** domain, location, employeeSize, revenue, type, etc.
+```json
+{ "any": { "include": ["value"] } }
+```
 
-### Contact Filters
+**Contact filters (SearchMatch):** fullName, experience.*.title, skill, certification
+```json
+{ "any": { "include": { "mode": "SMART", "content": ["value"] } } }
+```
 
-Same structure as People Search API (profile, professional, skills, education).
+**Contact filters (AllAny):** seniority, departmentAndFunction, location
+```json
+{ "any": { "include": ["value"] } }
+```
 
-## Response
+## Contact Filter Properties
 
-### 200 Success
+- **fullName**: Person's full name (SMART/WORD/STRICT)
+- **experience**: current/latest/previous with title + duration
+- **seniority**: founder, owner, partner, c_suite, vp, director, head, manager, senior, mid-level, entry, intern
+- **departmentAndFunction**: Department classification
+- **skill**: Professional skills (SMART/WORD/STRICT)
+- **certification**: Professional certifications
+- **profileBadge**: CREATOR, HIRING, INFLUENCER, OPEN_TO_WORK, PAID_SOCIAL_MEMBERS
+- **education**: school, degree, fieldOfStudy, graduationDate range
+
+## Response (200)
 
 ```json
 {
-  "trackId": "string",
+  "trackId": "87dad120-e371-44e0-b896-cf90b2f84170",
+  "statistics": { "total": 25, "found": 0 },
+  "webhook": { "state": "PENDING", "retry": null },
   "state": "PENDING",
-  "statistics": {
-    "total": 0,
-    "success": 0,
-    "failed": 0,
-    "found": 0
-  }
+  "description": null
 }
 ```
 
-**State values:** `PENDING`, `PROCESSING`, `COMPLETED`, `FAILED`
+## Webhook
 
-### 404 Not Found
+Results POSTed to webhook URL. Auto-retry up to 3 times.
 
-```json
-{
-  "timestamp": "2025-10-14T13:27:32.210+00:00",
-  "status": 404,
-  "error": "data not found",
-  "path": ""
-}
-```
+## Rate Limits
 
-## Async Workflow
-
-1. Submit export request with optional webhook URL
-2. Receive `trackId` and `state: "PENDING"` immediately
-3. Poll via Export People Statistics endpoint OR wait for webhook
-4. Retrieve results via Export People Results endpoint
-
-## Related Endpoints
-
-- `GET /people/export/{trackId}/inquiries` - Get results
-- `GET /people/export/{trackId}/inquiries/statistics` - Poll progress
-- `PATCH /people/export/{trackId}/inquiries/notify` - Resend webhook
+5 requests/second, 300/minute, 18,000/hour

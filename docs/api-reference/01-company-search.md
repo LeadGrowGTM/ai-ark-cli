@@ -1,105 +1,79 @@
-# Company Search API
+# AI Ark Company Search API
 
 **Endpoint:** `POST https://api.ai-ark.com/api/developer-portal/v1/companies`
 
-**Description:** Searches for companies based on account filters across more than 69 million enriched, verified, and active company profiles.
+## Request Body
+
+> **IMPORTANT:** Official docs show `{ any: { mode, content } }` but this returns unfiltered results.
+> The actual working format is `{ any: { include: { mode, content } } }` — verified 2026-04-02.
+
+```json
+{
+  "account": {
+    "name": {
+      "any": {
+        "include": { "mode": "SMART", "content": ["Amazon"] }
+      }
+    },
+    "industries": {
+      "any": {
+        "include": { "mode": "WORD", "content": ["software"] }
+      }
+    },
+    "technologies": {
+      "any": {
+        "include": { "mode": "WORD", "content": ["react"] }
+      }
+    }
+  },
+  "page": 0,
+  "size": 10
+}
+```
+
+## SearchMatchFilter Schema (Verified Working)
+
+Used by: `name`, `industries`, `technologies`, `url`, `productAndServices`, `keyword`
+
+**Field names are PLURAL:** `industries` (not `industry`), `technologies` (not `technology`).
+
+```json
+{
+  "any": {
+    "include": { "mode": "SMART", "content": ["value1", "value2"] },
+    "exclude": { "mode": "SMART", "content": ["value3"] }
+  },
+  "all": {
+    "include": { "mode": "STRICT", "content": ["must match"] }
+  }
+}
+```
+
+## FilterWithAllAny (no search match)
+
+Used by: `domain`, `location`, `socialMedia`, `type`, `naics`
+
+```json
+{
+  "any": { "include": ["value1", "value2"] },
+  "all": { "include": ["must match"] }
+}
+```
+
+## Range Filters
+
+Used by: `employeeSize`, `revenue`, `foundedYear`
+
+```json
+{ "all": [[50, 200]] }
+```
+
+## Search Modes
+
+- **SMART**: Intelligent/contextual matching
+- **WORD**: Individual word matching
+- **STRICT**: Exact phrase matching
 
 ## Rate Limits
 
-- 5 requests per second
-- 300 per minute
-- 18,000 per hour
-
-## Authentication
-
-Header-based authentication required.
-
-**Required Header:** `Content-Type: application/json`
-
-## Request Body
-
-### Required Fields
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `page` | integer | Zero-based page number |
-| `size` | integer | Items per page (0-100 max) |
-
-### Optional Fields
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `lookalikeDomains` | array | Up to 5 domain/LinkedIn URLs for similar company discovery |
-| `account` | object | Complex filter object (see below) |
-
-### Account Filter Object
-
-#### Company Identification
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `account.domain` | FilterWithAllAny | Company domain include/exclude arrays |
-| `account.linkedin` | FilterWithAllAny | LinkedIn URL include/exclude arrays |
-| `account.url` | FilterWithAllAnyPlusSearchMatch | Supports domain, www, full URL, LinkedIn company URL |
-| `account.name` | FilterWithAllAnyPlusSearchMatch | Company name search |
-| `account.socialMediaLink` | FilterWithAllAny | Social media identifiers |
-| `account.phoneNumber` | FilterWithAllAny | Contact numbers |
-
-#### Company Details
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `account.industries` | FilterWithAllAnyPlusSearchMatchForIndustry | Industry values with SMART/WORD/STRICT matching modes |
-| `account.location` | FilterWithAllAny | Geographic location filters |
-| `account.productAndServices` | FilterWithAllAnyPlusSearchMatch | Offerings with search mode options |
-| `account.socialMedia` | FilterWithAllAnyEnumForSocialMedia | FACEBOOK, INSTAGRAM, TWITTER, LINKEDIN |
-| `account.type` | FilterWithAllAnyEnumForCompanyType | PRIVATELY_HELD, PUBLIC_COMPANY, NON_PROFIT, etc. |
-| `account.foundedYear` | FoundedYearWithType | Range-based filter |
-| `account.language` | FilterWithAllAnyAndRangeEnumForLanguage | Language options with range support |
-| `account.geoLocation` | object | position (lat/lng) with radius and unit (km/mi) |
-
-#### Financial & Size
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `account.employeeSize` | RangeWithType | Range arrays for employee count |
-| `account.revenue` | RevenueWithType | Range-based revenue amounts |
-| `account.funding` | object | type array, totalAmount, lastAmount, duration ranges |
-
-#### Advanced Filters
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `account.keyword` | FilterWithAllAnyCompanyKeywords | Advanced search with sources and content |
-| `account.metric` | CompanyMetrics | Employee counts and growth by function/timeframe |
-| `account.technologies` | FilterWithAllAnyPlusSearchMatch | Technology stack filtering |
-| `account.naics` | FilterWithAllAny | NAICS industry classification codes |
-
-## Response
-
-### 200 Success
-
-```json
-{
-  "content": [...],
-  "pageable": {...},
-  "totalElements": 0,
-  "totalPages": 0,
-  "first": true,
-  "last": true,
-  "empty": false
-}
-```
-
-Response contains paginated company results including: ID, name, description, founded year, staff counts, locations, technologies, industries, keywords, contact info, and financial details.
-
-### 404 Not Found
-
-```json
-{
-  "timestamp": "2025-10-14T13:27:32.210+00:00",
-  "status": 404,
-  "error": "data not found",
-  "path": ""
-}
-```
+5 requests/second, 300/minute, 18,000/hour
