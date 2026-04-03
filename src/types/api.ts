@@ -19,4 +19,5 @@ export type ApiEndpoint =
   | "/people/email-finder"
   | `/people/email-finder/${string}/statistics`
   | `/people/email-finder/${string}/inquiries`
-  | "/payments/credits";
+  | "/payments/credits"
+  | "/people/export/single";

@@ -73,8 +73,51 @@ export interface FilterWithAllAny {
   any?: FilterCondition;
 }
 
+// ---------------------------------------------------------------------------
+// SearchMatch filter — used by account.name, account.industries,
+// account.technologies, account.url, account.keyword, etc.
+//
+// Company search format:
+//   { any: { mode: "SMART", content: ["value"] } }
+//
+// People contact filter format (fullName, title, skill, etc.):
+//   { any: { include: { mode: "SMART", content: ["value"] } } }
+// ---------------------------------------------------------------------------
+
+export type SearchMode = "SMART" | "WORD" | "STRICT";
+
+export interface SearchMatchValue {
+  mode: SearchMode;
+  content: string[];
+}
+
+/**
+ * Search match filter — used by ALL FilterWithAllAnyPlusSearchMatch fields.
+ * Both account-level (name, industries, technologies) and contact-level
+ * (fullName, title, skill) use the same structure:
+ *   { any: { include: { mode: "SMART", content: ["value"] } } }
+ */
+export interface SearchMatchCondition {
+  include?: SearchMatchValue;
+  exclude?: SearchMatchValue;
+}
+
+export interface SearchMatchFilter {
+  any?: SearchMatchCondition;
+  all?: SearchMatchCondition;
+}
+
+// Backward compat aliases
+export type AccountSearchMatchFilter = SearchMatchFilter;
+export type ContactSearchMatchFilter = SearchMatchFilter;
+export type ContactSearchMatchCondition = SearchMatchCondition;
+
+/**
+ * @deprecated Use AccountSearchMatchFilter or ContactSearchMatchFilter instead.
+ * Kept for backward compat during migration.
+ */
 export interface FilterWithAllAnyPlusSearchMatch extends FilterWithAllAny {
-  searchMode?: "SMART" | "WORD" | "STRICT";
+  searchMode?: SearchMode;
 }
 
 export interface RangeWithType {

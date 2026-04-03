@@ -8,6 +8,7 @@ import { peoplePhoneCommand } from "./commands/people-phone.js";
 import { peopleAnalyzeCommand } from "./commands/people-analyze.js";
 import { peopleExportCommand } from "./commands/people-export.js";
 import { peopleFindEmailsCommand } from "./commands/people-find-emails.js";
+import { peopleExportOneCommand } from "./commands/people-export-one.js";
 
 // Global error handler for uncaught exceptions
 process.on("uncaughtException", (error: Error) => {
@@ -43,5 +44,6 @@ people.addCommand(peoplePhoneCommand());
 people.addCommand(peopleAnalyzeCommand());
 people.addCommand(peopleExportCommand());
 people.addCommand(peopleFindEmailsCommand());
+people.addCommand(peopleExportOneCommand());
 
 program.parse();

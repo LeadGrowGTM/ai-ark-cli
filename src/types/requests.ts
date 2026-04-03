@@ -4,7 +4,8 @@
 
 import type {
   FilterWithAllAny,
-  FilterWithAllAnyPlusSearchMatch,
+  AccountSearchMatchFilter,
+  ContactSearchMatchFilter,
   RangeWithType,
   DateRange,
 } from "./common.js";
@@ -32,13 +33,13 @@ export interface FundingFilter {
 export interface AccountFilter {
   domain?: FilterWithAllAny;
   linkedin?: FilterWithAllAny;
-  url?: FilterWithAllAnyPlusSearchMatch;
-  name?: FilterWithAllAnyPlusSearchMatch;
+  url?: AccountSearchMatchFilter;
+  name?: AccountSearchMatchFilter;
   socialMediaLink?: FilterWithAllAny;
   phoneNumber?: FilterWithAllAny;
-  industries?: FilterWithAllAnyPlusSearchMatch;
+  industries?: AccountSearchMatchFilter;
   location?: FilterWithAllAny;
-  productAndServices?: FilterWithAllAnyPlusSearchMatch;
+  productAndServices?: AccountSearchMatchFilter;
   socialMedia?: FilterWithAllAny;
   type?: FilterWithAllAny;
   foundedYear?: RangeWithType;
@@ -47,9 +48,9 @@ export interface AccountFilter {
   employeeSize?: RangeWithType;
   revenue?: RangeWithType;
   funding?: FundingFilter;
-  keyword?: FilterWithAllAnyPlusSearchMatch;
+  keyword?: AccountSearchMatchFilter;
   metric?: Record<string, unknown>;
-  technologies?: FilterWithAllAnyPlusSearchMatch;
+  technologies?: AccountSearchMatchFilter;
   naics?: FilterWithAllAny;
 }
 
@@ -58,9 +59,9 @@ export interface AccountFilter {
 // ---------------------------------------------------------------------------
 
 export interface EducationFilter {
-  school?: FilterWithAllAnyPlusSearchMatch;
+  school?: ContactSearchMatchFilter;
   degree?: FilterWithAllAny;
-  fieldOfStudy?: FilterWithAllAnyPlusSearchMatch;
+  fieldOfStudy?: ContactSearchMatchFilter;
   date?: {
     start?: DateRange;
     end?: DateRange;
@@ -68,31 +69,40 @@ export interface EducationFilter {
 }
 
 export interface ExperienceFilter {
-  currentTitle?: FilterWithAllAnyPlusSearchMatch;
-  previousTitle?: FilterWithAllAnyPlusSearchMatch;
-  duration?: RangeWithType;
+  current?: {
+    title?: ContactSearchMatchFilter;
+    duration?: {
+      currentJob?: { min?: { year: number; month: number }; max?: { year: number; month: number } };
+    };
+  };
+  latest?: {
+    title?: ContactSearchMatchFilter;
+  };
+  previous?: {
+    title?: ContactSearchMatchFilter;
+  };
 }
 
 export interface ContactFilter {
   // Profile
-  fullName?: FilterWithAllAnyPlusSearchMatch;
+  fullName?: ContactSearchMatchFilter;
   socialMediaLink?: FilterWithAllAny;
   linkedin?: FilterWithAllAny;
   location?: FilterWithAllAny;
   languageSkills?: FilterWithAllAny;
   profileBadge?: FilterWithAllAny;
   // Professional
-  currentCompany?: FilterWithAllAny;
-  pastCompany?: FilterWithAllAny;
+  company?: FilterWithAllAny;
   seniority?: FilterWithAllAny;
-  department?: FilterWithAllAny;
+  departmentAndFunction?: FilterWithAllAny;
   experience?: ExperienceFilter;
   // Skills & Education
-  skills?: FilterWithAllAnyPlusSearchMatch;
-  certifications?: FilterWithAllAnyPlusSearchMatch;
+  skill?: ContactSearchMatchFilter;
+  certification?: ContactSearchMatchFilter;
   education?: EducationFilter;
-  keywords?: FilterWithAllAnyPlusSearchMatch;
+  keyword?: ContactSearchMatchFilter;
   socialMedia?: FilterWithAllAny;
+  language?: ContactSearchMatchFilter;
 }
 
 // ---------------------------------------------------------------------------
@@ -147,4 +157,10 @@ export interface ExportPeopleRequest {
 export interface EmailFinderRequest {
   trackId: string;
   webhook?: string;
+}
+
+/** POST /people/export/single */
+export interface ExportSingleRequest {
+  id?: string;
+  url?: string;
 }
