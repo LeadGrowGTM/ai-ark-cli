@@ -121,6 +121,8 @@ export interface FilterWithAllAnyPlusSearchMatch extends FilterWithAllAny {
 }
 
 export interface RangeWithType {
+  type?: "RANGE";
+  range?: { start: number; end: number }[];
   all?: number[][];
   any?: number[][];
 }

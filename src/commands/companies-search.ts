@@ -29,6 +29,8 @@ export function companiesSearchCommand(): Command {
     .option("--geo <lat,lng,radius>", "GeoLocation filter (e.g. 40.71,-74.00,50km)")
     .option("--geo-unit <unit>", "Geo radius unit: km or mi", "km")
     .option("--products <terms...>", "Filter by products/services")
+    .option("--revenue <range>", "Revenue range (e.g. 1000000-50000000)")
+    .option("--retail-size <range>", "Number of retail locations (e.g. 5-100)")
     .option("--lookalike <domains...>", "Find similar companies (up to 5 domains)")
     // Exclude filters
     .option("--exclude-domain <domains...>", "Exclude domains")

@@ -46,6 +46,7 @@ export interface AccountFilter {
   language?: FilterWithAllAny;
   geoLocation?: GeoLocation;
   employeeSize?: RangeWithType;
+  retailSize?: RangeWithType;
   revenue?: RangeWithType;
   funding?: FundingFilter;
   keyword?: AccountSearchMatchFilter;

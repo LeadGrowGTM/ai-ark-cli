@@ -41,10 +41,10 @@ export function searchMatchFilter(
   return { any: condition };
 }
 
-export function rangeFilter(rangeStr: string): Record<string, number[][]> | undefined {
+export function rangeFilter(rangeStr: string): Record<string, unknown> | undefined {
   const [min, max] = rangeStr.split("-").map(Number);
   if (isNaN(min) || isNaN(max)) return undefined;
-  return { all: [[min, max]] };
+  return { type: "RANGE", range: [{ start: min, end: max }] };
 }
 
 // ---------------------------------------------------------------------------
@@ -74,6 +74,9 @@ export interface FilterOpts {
   geoUnit?: string;
   products?: string[];
   lookalike?: string[];
+  revenue?: string;
+  retailSize?: string;
+  founded?: string;
 
   // Account excludes
   excludeDomain?: string[];
@@ -197,6 +200,24 @@ export function buildAccountFilter(
   if (opts.products) {
     acct.productAndServices = searchMatchFilter(opts.products, undefined, mode) as AccountFilter["productAndServices"];
     hasFilter = true;
+  }
+
+  // Revenue (Range)
+  if (opts.revenue) {
+    const range = rangeFilter(opts.revenue as string);
+    if (range) {
+      acct.revenue = range as AccountFilter["revenue"];
+      hasFilter = true;
+    }
+  }
+
+  // Retail Size (Range)
+  if (opts.retailSize) {
+    const range = rangeFilter(opts.retailSize as string);
+    if (range) {
+      acct.retailSize = range as AccountFilter["retailSize"];
+      hasFilter = true;
+    }
   }
 
   return hasFilter ? acct : undefined;

@@ -231,17 +231,63 @@ export interface MobilePhoneResponse {
 // Personality analysis
 // ---------------------------------------------------------------------------
 
-export interface PersonalityTrait {
-  trait: string;
-  score: number;
-  description: string;
+/** POST /people/analysis response */
+export interface EmailAdvice {
+  definition: string | null;
+  advice: string | null;
+  example: string | null;
 }
 
-/** POST /people/analysis response */
+export interface CommunicationProfile {
+  types: string[];
+  descriptions: string[];
+  adjectives: string[];
+  whatToSay: string[];
+  whatToAvoid: string[];
+  subject: string | null;
+  body: string | null;
+}
+
+export interface SellingProfile {
+  email: Record<string, EmailAdvice>;
+  interests: string[];
+  communication: CommunicationProfile;
+  keyTraits: {
+    risk: string | null;
+    abilityToSayNo: string | null;
+    speed: string | null;
+    decisionDrivers: string | null;
+  };
+}
+
+export interface AssessmentScore {
+  score: number;
+  level: string;
+}
+
+export interface AssessmentSummary {
+  descriptions: string[];
+  labels: string[];
+}
+
 export interface PersonalityAnalysisResponse {
-  profile: string;
-  traits: PersonalityTrait[];
-  summary: string | null;
+  model: string;
+  source: {
+    headline: string;
+    refId: string;
+    skills: string[];
+    summary: string | null;
+  };
+  score: number;
+  selling: SellingProfile;
+  hiring: SellingProfile;
+  assessments: {
+    archetype: string;
+    ocean: Record<string, AssessmentScore | AssessmentSummary>;
+    disc: Record<string, AssessmentScore | AssessmentSummary>;
+  };
+  status: string;
+  success: boolean;
 }
 
 // ---------------------------------------------------------------------------
