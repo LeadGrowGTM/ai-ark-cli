@@ -53,22 +53,47 @@ export class AiArkClient {
   }
 
   async get<T>(endpoint: ApiEndpoint): Promise<T> {
-    await this.rateLimiter.acquire();
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
-      method: "GET",
-      headers: this.headers,
-    });
-    return this.handleResponse<T>(response);
+    return this.requestWithRetry<T>(() =>
+      fetch(`${BASE_URL}${endpoint}`, {
+        method: "GET",
+        headers: this.headers,
+      }),
+    );
   }
 
   async post<T>(endpoint: ApiEndpoint, body: unknown): Promise<T> {
-    await this.rateLimiter.acquire();
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
-      method: "POST",
-      headers: this.headers,
-      body: JSON.stringify(body),
-    });
-    return this.handleResponse<T>(response);
+    return this.requestWithRetry<T>(() =>
+      fetch(`${BASE_URL}${endpoint}`, {
+        method: "POST",
+        headers: this.headers,
+        body: JSON.stringify(body),
+      }),
+    );
+  }
+
+  private async requestWithRetry<T>(
+    doFetch: () => Promise<Response>,
+    maxRetries = 5,
+  ): Promise<T> {
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      await this.rateLimiter.acquire();
+      const response = await doFetch();
+
+      if (response.status === 429) {
+        if (attempt === maxRetries) {
+          throw new Error("HTTP 429: Too Many Requests (exhausted retries)");
+        }
+        const backoff = Math.min(2 ** attempt * 5, 60);
+        process.stderr.write(
+          `  Rate limited — backing off ${backoff}s (attempt ${attempt + 1}/${maxRetries})\n`,
+        );
+        await new Promise((r) => setTimeout(r, backoff * 1000));
+        continue;
+      }
+
+      return this.handleResponse<T>(response);
+    }
+    throw new Error("Unreachable");
   }
 
   private async handleResponse<T>(response: Response): Promise<T> {
