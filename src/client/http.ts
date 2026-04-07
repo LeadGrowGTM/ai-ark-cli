@@ -129,8 +129,11 @@ export class AiArkClient {
 export function createClient(): AiArkClient {
   const apiKey = process.env.AI_ARK_API_KEY;
   if (!apiKey) {
+    const searchedDirs = (process.env._AI_ARK_ENV_SEARCHED || "none").split(";").filter(Boolean);
     throw new Error(
-      "AI_ARK_API_KEY environment variable is not set. Get your key at https://app.ai-ark.com/settings/api-management/dashboard",
+      `AI_ARK_API_KEY environment variable is not set.\n` +
+      `  Searched for .env in: ${searchedDirs.join(", ")}\n` +
+      `  Get your key at https://app.ai-ark.com/settings/api-management/dashboard`,
     );
   }
   return new AiArkClient(apiKey);

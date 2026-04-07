@@ -5,8 +5,11 @@ import { fileURLToPath } from "url";
 import { Command } from "commander";
 
 // Load .env so callers don't need to inline the key
-// Try CLI's own directory first, then CWD as fallback
+// Try CLI's own directory first, then known install, then CWD as fallback
+const envSearched: string[] = [];
+
 function loadEnvFile(dir: string): boolean {
+  envSearched.push(dir);
   try {
     const p = resolve(dir, ".env");
     const lines = readFileSync(p, "utf-8").replace(/\r/g, "").split("\n");
@@ -28,8 +31,15 @@ function loadEnvFile(dir: string): boolean {
 
 const cliDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 if (!loadEnvFile(cliDir)) {
-  loadEnvFile(process.cwd());
+  // Hardcoded fallback for known install location
+  const knownInstall = resolve("C:/Users/mitch/Everything_CC/ai-ark-cli");
+  if (cliDir !== knownInstall && !loadEnvFile(knownInstall)) {
+    loadEnvFile(process.cwd());
+  }
 }
+
+// Expose searched dirs so createClient() can report them in errors
+process.env._AI_ARK_ENV_SEARCHED = envSearched.join(";");
 
 import { creditsCommand } from "./commands/credits.js";
 import { companiesSearchCommand } from "./commands/companies-search.js";
