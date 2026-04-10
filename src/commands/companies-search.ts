@@ -9,6 +9,7 @@ import { formatOutput, readCsvFile, readStdin, pushToClay } from "../io/index.js
 import type { OutputFormat } from "../io/index.js";
 import { buildAccountFilter } from "../filters.js";
 import type { FilterOpts } from "../filters.js";
+import { printReviewUrl, buildSearchUrl } from "../url-builder.js";
 import type {
   CompanySearchRequest,
   CompanySearchResponse,
@@ -47,6 +48,8 @@ export function companiesSearchCommand(): Command {
     .option("--input <file>", "CSV file for batch input")
     .option("--domain-col <name>", "Column name for domain in CSV", "domain")
     .option("--clay-table <id>", "Push results to a Clay table")
+    .option("--dry-run", "Print review URL + filter payload without calling the API")
+    .option("--no-review-url", "Suppress the 🔗 Review URL printed to stderr")
     .action(async (opts) => {
       try {
         const client = createClient();
@@ -70,6 +73,29 @@ export function companiesSearchCommand(): Command {
           const records = await readStdin();
           const stdinDomains = records.map((r) => r.domain || r.value).filter(Boolean);
           domains = [...domains, ...stdinDomains];
+        }
+
+        // Resolve domains onto filterOpts so the URL reflects the real search.
+        if (domains.length > 0) {
+          filterOpts.domain = domains;
+        }
+
+        if (opts.reviewUrl !== false) {
+          printReviewUrl(filterOpts, "companies");
+        }
+
+        if (opts.dryRun) {
+          const body: CompanySearchRequest = {
+            page: parseInt(opts.page, 10),
+            size: parseInt(opts.size, 10),
+          };
+          body.account = buildAccountFilter(filterOpts, "company");
+          process.stderr.write("Dry run — no API call made. Payload:\n");
+          formatOutput(
+            { reviewUrl: buildSearchUrl(filterOpts, "companies"), request: body },
+            format,
+          );
+          return;
         }
 
         // If we have batch domains, search each one
@@ -97,9 +123,6 @@ export function companiesSearchCommand(): Command {
           page: parseInt(opts.page, 10),
           size: parseInt(opts.size, 10),
         };
-
-        // Override domain in filterOpts for single-domain case
-        if (domains.length === 1) filterOpts.domain = domains;
 
         const account = buildAccountFilter(filterOpts, "company");
         if (account) body.account = account;

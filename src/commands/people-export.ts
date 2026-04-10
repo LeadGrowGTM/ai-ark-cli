@@ -10,6 +10,7 @@ import { formatOutput, pushToClay } from "../io/index.js";
 import type { OutputFormat } from "../io/index.js";
 import { buildAccountFilter, buildContactFilter } from "../filters.js";
 import type { FilterOpts } from "../filters.js";
+import { printReviewUrl, buildSearchUrl } from "../url-builder.js";
 import type {
   ExportPeopleRequest,
   ExportJobResponse,
@@ -58,6 +59,8 @@ export function peopleExportCommand(): Command {
     .option("--size <number>", "Max people to export (1-10000)", "100")
     .option("--format <type>", "Output format: json, csv, table", "json")
     .option("--clay-table <id>", "Push results to a Clay table")
+    .option("--dry-run", "Print review URL + filter payload without submitting export")
+    .option("--no-review-url", "Suppress the 🔗 Review URL printed to stderr")
     .option("--no-wait", "Return trackId immediately without polling")
     .action(async (opts) => {
       try {
@@ -79,6 +82,19 @@ export function peopleExportCommand(): Command {
 
         const contact = buildContactFilter(filterOpts);
         if (contact) body.contact = contact;
+
+        if (opts.reviewUrl !== false) {
+          printReviewUrl(filterOpts, "people");
+        }
+
+        if (opts.dryRun) {
+          process.stderr.write("Dry run — no export submitted. Payload:\n");
+          formatOutput(
+            { reviewUrl: buildSearchUrl(filterOpts, "people"), request: body },
+            format,
+          );
+          return;
+        }
 
         // Submit the export job
         const job = await client.post<ExportJobResponse>("/people/export", body);

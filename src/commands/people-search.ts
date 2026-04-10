@@ -9,6 +9,7 @@ import { formatOutput, readCsvFile, readStdin, pushToClay } from "../io/index.js
 import type { OutputFormat } from "../io/index.js";
 import { buildAccountFilter, buildContactFilter } from "../filters.js";
 import type { FilterOpts } from "../filters.js";
+import { printReviewUrl, buildSearchUrl } from "../url-builder.js";
 import type {
   PeopleSearchRequest,
   PeopleSearchResponse,
@@ -59,6 +60,8 @@ export function peopleSearchCommand(): Command {
     .option("--input <file>", "CSV file for batch input")
     .option("--domain-col <name>", "Column name for domain in CSV", "domain")
     .option("--clay-table <id>", "Push results to a Clay table")
+    .option("--dry-run", "Print review URL + filter payload without calling the API")
+    .option("--no-review-url", "Suppress the 🔗 Review URL printed to stderr")
     .action(async (opts) => {
       try {
         const client = createClient();
@@ -91,6 +94,32 @@ export function peopleSearchCommand(): Command {
           domains = [...domains, ...stdinDomains];
         }
 
+        // Resolve domains onto filterOpts so the URL reflects the real search.
+        if (domains.length > 0) {
+          filterOpts.domain = domains;
+        }
+
+        // Emit review URL (unless suppressed).
+        if (opts.reviewUrl !== false) {
+          printReviewUrl(filterOpts, "people");
+        }
+
+        // Dry-run: print URL + payload, skip the API call entirely.
+        if (opts.dryRun) {
+          const body: PeopleSearchRequest = {
+            page: parseInt(opts.page, 10),
+            size: parseInt(opts.size, 10),
+          };
+          const account = buildAccountFilter(filterOpts, "people");
+          if (account) body.account = account;
+          const contact = buildContactFilter(filterOpts);
+          if (contact) body.contact = contact;
+          process.stderr.write("Dry run — no API call made. Payload:\n");
+          formatOutput({ reviewUrl: buildSearchUrl(filterOpts, "people"), request: body }, format);
+          filterOpts.keyword = savedKeyword;
+          return;
+        }
+
         // If we have batch domains, search each one
         if (domains.length > 1) {
           const allResults: unknown[] = [];
@@ -121,8 +150,6 @@ export function peopleSearchCommand(): Command {
           page: parseInt(opts.page, 10),
           size: parseInt(opts.size, 10),
         };
-
-        if (domains.length === 1) filterOpts.domain = domains;
 
         const account = buildAccountFilter(filterOpts, "people");
         if (account) body.account = account;
