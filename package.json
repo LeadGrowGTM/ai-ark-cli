@@ -6,6 +6,7 @@
     "ai-ark": "./dist/index.js"
   },
   "scripts": {
+    "setup": "bun run scripts/setup.ts",
     "build": "bun build src/index.ts --outdir dist --target bun",
     "dev": "bun run src/index.ts"
   },

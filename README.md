@@ -7,16 +7,12 @@ Search 400M+ people and 69M+ companies from the command line. Filter, exclude, e
 ## Setup
 
 ```bash
-# 1. Install dependencies
-bun install
-
-# 2. Add your API key
-echo "AI_ARK_API_KEY=your_key_here" > .env
-# Get your key at https://app.ai-ark.com/settings/api-management/dashboard
-
-# 3. Verify it works
-bun run src/index.ts credits
+git clone https://github.com/MitchellkellerLG/ai-ark-cli
+cd ai-ark-cli
+bun run setup
 ```
+
+The setup wizard installs dependencies, prompts for your API key, and verifies it works. Get your key at [app.ai-ark.com/settings/api-management/dashboard](https://app.ai-ark.com/settings/api-management/dashboard).
 
 No build step required. Bun runs TypeScript source directly.
 
