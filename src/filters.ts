@@ -273,7 +273,7 @@ export function buildContactFilter(opts: FilterOpts): ContactFilter | undefined 
 
     contact.experience = {
       current: {
-        ...(titleFilter ? { title: titleFilter as ContactFilter["experience"] } : {}),
+        ...(titleFilter ? { title: titleFilter } : {}),
         ...(durationFilter ? { duration: durationFilter } : {}),
       },
     } as ContactFilter["experience"];

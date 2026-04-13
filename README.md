@@ -120,6 +120,46 @@ bun run src/index.ts companies search \
   --size 100 --format csv
 ```
 
+## Review Before You Spend
+
+Every search and export command generates an AI Ark platform URL that opens your exact filter set in the browser. Use it to verify the list looks right before burning API credits — especially useful for large exports.
+
+```bash
+# --dry-run: print the review URL and exit (no API call, no credits spent)
+bun run src/index.ts people search \
+  --title "VP of Sales" \
+  --industry "SaaS" \
+  --employees 50-500 \
+  --seniority vp director \
+  --dry-run
+```
+
+```
+[DRY RUN] Review URL (stderr):
+https://app.ai-ark.com/people?...
+
+[DRY RUN] Request payload: { ... }
+```
+
+Open that URL → confirm the list matches your intent → run without `--dry-run` to fetch results.
+
+The review URL also prints automatically after every real search (to stderr, so it never pollutes piped output). To suppress it:
+
+```bash
+bun run src/index.ts people search --title "CRO" --no-review-url --format csv > leads.csv
+```
+
+### When to use review URLs
+
+| Situation | Workflow |
+|-----------|----------|
+| First time running a new filter set | `--dry-run` → inspect in browser → run for real |
+| Large export (hundreds to thousands of records) | `--dry-run` → verify list in platform → `people export` |
+| Debugging "why did I get these results?" | Check review URL from the previous run (printed to stderr) |
+| Building a list interactively | Open URL in browser, adjust filters in platform UI, paste back as CLI flags |
+
+The URL is a permalink — share it, save it, or open it later to see the same search on fresh data.
+
 ## Pipeline Pattern
 
 Chain searches to build targeted lists:
