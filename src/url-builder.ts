@@ -19,6 +19,7 @@
  *   for manual paste into the platform. All other filters load correctly.
  */
 
+import { writeFileSync } from "fs";
 import type { FilterOpts } from "./filters.js";
 
 const BASE_URL = "https://app.ai-ark.com";
@@ -229,17 +230,58 @@ export function printReviewUrl(opts: FilterOpts, surface: SearchSurface = "peopl
   const url = buildSearchUrl(opts, surface);
   process.stderr.write(`\n🔗 Review in AI Ark: ${url}\n`);
 
-  if (opts.domain && opts.domain.length > 0) {
-    process.stderr.write(
-      `📋 Paste these ${opts.domain.length} domain(s) into the platform's include box:\n`,
-    );
-    process.stderr.write(`   ${opts.domain.join(", ")}\n`);
+  const hasInclude = opts.domain && opts.domain.length > 0;
+  const hasExclude = opts.excludeDomain && opts.excludeDomain.length > 0;
+
+  if (hasInclude || hasExclude) {
+    // Build a markdown file with fenced code blocks so the lists are
+    // one-click copy in any markdown renderer (VS Code, Claude Code, etc.)
+    const lines: string[] = [
+      "# AI Ark Domain Paste List",
+      "",
+      `Generated: ${new Date().toISOString()}`,
+      "",
+      "> Domains do not carry into the review URL (platform limitation).",
+      "> Copy each list below and paste it into the corresponding box in the AI Ark platform.",
+      "",
+    ];
+
+    if (hasInclude) {
+      lines.push(`## Include (${opts.domain!.length} domains)`);
+      lines.push("");
+      lines.push("Paste into the **bulk include** box:");
+      lines.push("");
+      lines.push("```");
+      lines.push(opts.domain!.join(", "));
+      lines.push("```");
+      lines.push("");
+    }
+
+    if (hasExclude) {
+      lines.push(`## Exclude (${opts.excludeDomain!.length} domains)`);
+      lines.push("");
+      lines.push("Paste into the **bulk exclude** box:");
+      lines.push("");
+      lines.push("```");
+      lines.push(opts.excludeDomain!.join(", "));
+      lines.push("```");
+      lines.push("");
+    }
+
+    const filePath = "ai-ark-domains-paste.md";
+    writeFileSync(filePath, lines.join("\n"), "utf8");
+
+    if (hasInclude) {
+      process.stderr.write(
+        `📋 ${opts.domain!.length} include domain(s) → ${filePath}\n`,
+      );
+    }
+    if (hasExclude) {
+      process.stderr.write(
+        `📋 ${opts.excludeDomain!.length} exclude domain(s) → ${filePath}\n`,
+      );
+    }
   }
-  if (opts.excludeDomain && opts.excludeDomain.length > 0) {
-    process.stderr.write(
-      `📋 Paste these ${opts.excludeDomain.length} domain(s) into the exclude box:\n`,
-    );
-    process.stderr.write(`   ${opts.excludeDomain.join(", ")}\n`);
-  }
+
   process.stderr.write("\n");
 }

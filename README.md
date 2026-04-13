@@ -153,18 +153,28 @@ bun run src/index.ts people search --title "CRO" --no-review-url --format csv > 
 
 **Domains do not carry into the review URL.** This is a platform limitation — the bulk domain include requires a server-side session UUID that can't be embedded in a shareable link. Every other filter (title, seniority, keywords, location, duration, employees, industry, badges) round-trips correctly.
 
-When your search includes domains (via `--domain` or `--input`), the CLI prints a paste list alongside the URL:
+When your search includes domains (via `--domain` or `--input`), the CLI writes the full domain list to `ai-ark-domains-paste.md` in the current directory and prints the file path to stderr:
 
 ```
 🔗 Review in AI Ark: https://app.ai-ark.com/people?...
+📋 47 include domain(s) → ai-ark-domains-paste.md
+```
 
-📋 Paste these 3 domain(s) into the platform's bulk include box:
-hubspot.com, salesforce.com, notion.so
+The file contains each list in a fenced code block — one click to copy the entire comma-separated list, no matter how many domains:
+
+```markdown
+## Include (47 domains)
+
+Paste into the **bulk include** box:
+
+\```
+hubspot.com, salesforce.com, notion.so, ...
+\```
 ```
 
 Two-step workflow:
 1. Open the review URL — all non-domain filters pre-load automatically
-2. Copy the domain list from the CLI output and paste it into the platform's bulk include box
+2. Open `ai-ark-domains-paste.md`, copy the list, paste into the platform's bulk include box
 
 Without step 2, the platform search has no account scope and will return unfiltered results.
 
