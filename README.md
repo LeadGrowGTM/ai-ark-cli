@@ -149,6 +149,25 @@ The review URL also prints automatically after every real search (to stderr, so 
 bun run src/index.ts people search --title "CRO" --no-review-url --format csv > leads.csv
 ```
 
+### Domain searches require a second step
+
+**Domains do not carry into the review URL.** This is a platform limitation — the bulk domain include requires a server-side session UUID that can't be embedded in a shareable link. Every other filter (title, seniority, keywords, location, duration, employees, industry, badges) round-trips correctly.
+
+When your search includes domains (via `--domain` or `--input`), the CLI prints a paste list alongside the URL:
+
+```
+🔗 Review in AI Ark: https://app.ai-ark.com/people?...
+
+📋 Paste these 3 domain(s) into the platform's bulk include box:
+hubspot.com, salesforce.com, notion.so
+```
+
+Two-step workflow:
+1. Open the review URL — all non-domain filters pre-load automatically
+2. Copy the domain list from the CLI output and paste it into the platform's bulk include box
+
+Without step 2, the platform search has no account scope and will return unfiltered results.
+
 ### When to use review URLs
 
 | Situation | Workflow |
