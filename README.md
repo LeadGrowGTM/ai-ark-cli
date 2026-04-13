@@ -1,5 +1,7 @@
 # AI Ark CLI
 
+> Built by [LeadGrow](https://leadgrow.ai) — GTM agency specializing in outbound systems and list building.
+
 Search 400M+ people and 69M+ companies from the command line. Filter, exclude, export with verified emails, and pipe results to CSV, JSON, or Clay.
 
 ## Setup
