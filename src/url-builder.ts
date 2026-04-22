@@ -80,39 +80,48 @@ export function buildSearchUrl(
   // Domains are surfaced via printReviewUrl's side-channel note instead.
 
   // --- Company name --------------------------------------------------------
-  // In people surface the company name lives on `company`; in companies surface on `name`.
   const companyName = surface === "people" ? opts.company : opts.name;
   const companyNameExclude =
     surface === "people" ? opts.excludeCompany : opts.excludeName;
   if (companyName && companyName.length > 0) {
-    params.set("company_include_name", joinMulti(companyName));
+    params.set("include_company_name", joinMulti(companyName));
   }
   if (companyNameExclude && companyNameExclude.length > 0) {
-    params.set("company_exclude_name", joinMulti(companyNameExclude));
+    params.set("exclude_company_name", joinMulti(companyNameExclude));
   }
 
   // --- Industry ------------------------------------------------------------
   if (opts.industry && opts.industry.length > 0) {
-    params.set("company_include_industry", joinMulti(opts.industry));
+    params.set("include_industry", joinMulti(opts.industry));
   }
   if (opts.excludeIndustry && opts.excludeIndustry.length > 0) {
-    params.set("company_exclude_industry", joinMulti(opts.excludeIndustry));
+    params.set("exclude_industry", joinMulti(opts.excludeIndustry));
   }
 
   // --- Technology ----------------------------------------------------------
   if (opts.technology && opts.technology.length > 0) {
-    params.set("company_include_technology", joinMulti(opts.technology));
+    params.set("include_technologies", joinMulti(opts.technology));
   }
 
   // --- Employee size range -------------------------------------------------
   if (opts.employees) {
     const [min, max] = opts.employees.split("-");
-    if (min && max) params.set("company_employees", `${min}>${max}`);
+    if (min && max) params.set("employee_size_custom", `${min}>${max}`);
+  }
+
+  // --- Revenue -------------------------------------------------------------
+  if (opts.revenue) {
+    params.set("revenue", opts.revenue);
+  }
+
+  // --- Founded year --------------------------------------------------------
+  if (opts.founded) {
+    params.set("year_founded", opts.founded);
   }
 
   // --- Funding -------------------------------------------------------------
   if (opts.fundingType && opts.fundingType.length > 0) {
-    params.set("company_include_funding_type", joinMulti(opts.fundingType));
+    params.set("funding_type", joinMulti(opts.fundingType));
   }
 
   // --- Contact-scoped filters (people surface only) -----------------------
@@ -127,12 +136,12 @@ export function buildSearchUrl(
 
     // Previous title
     if (opts.previousTitle && opts.previousTitle.length > 0) {
-      params.set("previous_job_include_job_title", joinMulti(opts.previousTitle));
+      params.set("prev_job_include_job_title", joinMulti(opts.previousTitle));
     }
 
     // Seniority
     if (opts.seniority && opts.seniority.length > 0) {
-      params.set("current_job_include_seniority", joinMulti(opts.seniority));
+      params.set("current_job_role_seniority", joinMulti(opts.seniority));
     }
     if (opts.excludeSeniority && opts.excludeSeniority.length > 0) {
       params.set("current_job_exclude_seniority", joinMulti(opts.excludeSeniority));
@@ -140,7 +149,7 @@ export function buildSearchUrl(
 
     // Department
     if (opts.department && opts.department.length > 0) {
-      params.set("current_job_include_department", joinMulti(opts.department));
+      params.set("current_job_role_department", joinMulti(opts.department));
     }
     if (opts.excludeDepartment && opts.excludeDepartment.length > 0) {
       params.set("current_job_exclude_department", joinMulti(opts.excludeDepartment));
@@ -160,7 +169,7 @@ export function buildSearchUrl(
 
     // Skills
     if (opts.skills && opts.skills.length > 0) {
-      params.set("people_include_skills", joinMulti(opts.skills));
+      params.set("include_skills", joinMulti(opts.skills));
     }
 
     // Profile badge
@@ -187,7 +196,7 @@ export function buildSearchUrl(
 
     // Person name
     if (opts.name && opts.name.length > 0) {
-      params.set("people_include_name", joinMulti(opts.name));
+      params.set("fullName", joinMulti(opts.name));
     }
   }
 
@@ -195,18 +204,18 @@ export function buildSearchUrl(
   if (surface === "companies") {
     if (opts.location && opts.location.length > 0) {
       params.set(
-        "company_include_location_region",
+        "company_hq_include_location_region",
         opts.location.map(encodeLocation).join("^"),
       );
     }
     if (opts.excludeLocation && opts.excludeLocation.length > 0) {
       params.set(
-        "company_exclude_location_region",
+        "company_hq_exclude_location_region",
         opts.excludeLocation.map(encodeLocation).join("^"),
       );
     }
     if (opts.keyword && opts.keyword.length > 0) {
-      params.set("company_include_keywords", joinMulti(opts.keyword));
+      params.set("companies_include_keywords", joinMulti(opts.keyword));
     }
   }
 
@@ -214,7 +223,7 @@ export function buildSearchUrl(
   // so the URL survives copy-paste through markdown renderers, terminals,
   // and chat clients that mis-handle "+" as a literal plus.
   const qs = params.toString().replace(/\+/g, "%20");
-  const path = surface === "people" ? "/search/people" : "/search/companies";
+  const path = surface === "people" ? "/search/people" : "/search/company";
   return qs ? `${BASE_URL}${path}?${qs}` : `${BASE_URL}${path}`;
 }
 

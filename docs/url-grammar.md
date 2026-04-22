@@ -1,6 +1,8 @@
 # AI Ark Platform URL Grammar
 
-Reverse-engineered mapping from the CLI's `FilterOpts` → `app.ai-ark.com/search/{people,companies}` URL query params. Used by `src/url-builder.ts` to emit clickable "review this search" links alongside every API call.
+Mapping from the CLI's `FilterOpts` → `app.ai-ark.com/search/{people,companies}` URL query params, aligned with the official AI Ark URL parameters reference. Used by `src/url-builder.ts` to emit clickable "review this search" links alongside every API call.
+
+Official reference: `.claude/skills/ai-ark-search/references/url-parameters.md`
 
 ## Why this exists
 
@@ -22,35 +24,38 @@ The `^` separator is the AI Ark UI's primary multi-value glue. Use it anywhere y
 
 ### People surface (`/search/people`)
 
-| URL param                             | FilterOpt                    | Format                                   | Example |
+| URL param (official)                  | FilterOpt                    | Format                                   | Example |
 | ------------------------------------- | ---------------------------- | ---------------------------------------- | ------- |
 | ~~`bulk_include_company_domain`~~     | `--domain`                   | **dropped — paste manually in-platform** | see side-channel note |
 | ~~`bulk_exclude_company_domain`~~     | `--exclude-domain`           | **dropped — paste manually in-platform** | see side-channel note |
-| `company_include_name`                | `--company`                  | `^`-joined                               | `hubspot^salesforce` |
-| `company_exclude_name`                | `--exclude-company`          | `^`-joined                               | — |
-| `company_include_industry`            | `--industry`                 | `^`-joined                               | `software^saas` |
-| `company_include_technology`          | `--technology`               | `^`-joined                               | `hubspot^segment` |
-| `company_employees`                   | `--employees`                | `{min}>{max}`                            | `50>500` |
-| `company_include_funding_type`        | `--funding-type`             | `^`-joined                               | `SERIES_A^SERIES_B` |
+| `include_company_name`                | `--company`                  | `^`-joined                               | `hubspot^salesforce` |
+| `exclude_company_name`                | `--exclude-company`          | `^`-joined                               | — |
+| `include_industry`                    | `--industry`                 | `^`-joined                               | `software^saas` |
+| `exclude_industry`                    | `--exclude-industry`         | `^`-joined                               | — |
+| `include_technologies`                | `--technology`               | `^`-joined                               | `hubspot^segment` |
+| `employee_size_custom`                | `--employees`                | `{min}>{max}`                            | `50>500` |
+| `revenue`                             | `--revenue`                  | bucket labels `^`-joined                 | `$1M - $10M^$10M - $50M` |
+| `year_founded`                        | `--founded`                  | `{min}>{max}`                            | `2015>2024` |
+| `funding_type`                        | `--funding-type`             | `^`-joined                               | `series_a^series_b` |
 | `current_job_include_job_title`       | `--title`                    | `^`-joined                               | `growth^sales^gtm` |
 | `current_job_exclude_job_title`       | `--exclude-title`            | `^`-joined                               | `cto^cfo` |
-| `previous_job_include_job_title`      | `--previous-title`           | `^`-joined                               | `sdr` |
-| `current_job_include_seniority`       | `--seniority`                | `^`-joined                               | `vp^director^c_suite` |
+| `prev_job_include_job_title`          | `--previous-title`           | `^`-joined                               | `sdr` |
+| `current_job_role_seniority`          | `--seniority`                | `^`-joined                               | `vp^director^c_suite` |
 | `current_job_exclude_seniority`       | `--exclude-seniority`        | `^`-joined                               | `manager` |
-| `current_job_include_department`      | `--department`               | `^`-joined                               | `sales^marketing` |
+| `current_job_role_department`         | `--department`               | `Dept::SubFunction` `^`-joined           | `Engineering::Software Development` |
 | `current_job_exclude_department`      | `--exclude-department`       | `^`-joined                               | — |
 | `current_job_experience_current_job`  | `--job-duration-min/max`     | `{Y}:{M}>{Y}:{M}`, empty = 0             | `:2>1:` (min 2mo, max 1yr) |
 | `people_include_keywords`             | `--keyword`                  | `^`-joined                               | `gtm^revops` |
-| `people_include_skills`               | `--skills`                   | `^`-joined                               | `salesforce^python` |
+| `include_skills`                      | `--skills`                   | `^`-joined                               | `salesforce^python` |
 | `profile_badge_contacts_include`      | `--badge`                    | `^`-joined enum                          | `HIRING^PAID_SOCIAL_MEMBERS` |
 | `profile_badge_contacts_exclude`      | `--exclude-badge`            | `^`-joined enum                          | `OPEN_TO_WORK` |
 | `contact_include_location_region`     | `--location`                 | `{continent}::{country}` joined by `^`   | `Europe::Spain^North America::United States` |
 | `contact_exclude_location_region`     | `--exclude-location`         | same                                     | — |
-| `people_include_name`                 | `--name`                     | `^`-joined                               | `Jane Smith` |
+| `fullName`                            | `--name`                     | text                                     | `Jane Smith` |
 
 ### Companies surface (`/search/companies`)
 
-Mirrors the people surface for company-scoped filters. Location uses `company_include_location_region`/`company_exclude_location_region`. Keyword uses `company_include_keywords`.
+Mirrors the people surface for company-scoped filters. Location uses `company_hq_include_location_region`/`company_hq_exclude_location_region`. Keyword uses `companies_include_keywords`.
 
 ## Duration encoding
 
@@ -80,8 +85,7 @@ The builder therefore **omits these params entirely**. Instead, `printReviewUrl`
 | FilterOpt      | Why dropped |
 | -------------- | ----------- |
 | `--geo`        | The platform doesn't expose a geo-radius query param in the URL; it's stored in session state. |
-| `--retail-size`| UI doesn't surface this as a filter panel. |
-| `--revenue`    | UI doesn't surface this. |
+| `--retail-size`| Maps to `number_of_retail_locations` (min>max) but rarely used in CLI workflows. |
 | `--linkedin`   | Direct-profile filters don't have a URL form. |
 | `--match-mode` | URL always defaults to SMART; no override exposed. |
 
