@@ -50,6 +50,7 @@ import { peopleAnalyzeCommand } from "./commands/people-analyze.js";
 import { peopleExportCommand } from "./commands/people-export.js";
 import { peopleFindEmailsCommand } from "./commands/people-find-emails.js";
 import { peopleExportOneCommand } from "./commands/people-export-one.js";
+import { startCommand } from "./commands/start.js";
 
 // Global error handler for uncaught exceptions
 process.on("uncaughtException", (error: Error) => {
@@ -63,6 +64,9 @@ program
   .name("ai-ark")
   .description("AI Ark API CLI — search 400M+ people and 69M+ companies")
   .version("0.1.0");
+
+// Interactive guided workflow
+program.addCommand(startCommand());
 
 // Credits command
 program.addCommand(creditsCommand());
