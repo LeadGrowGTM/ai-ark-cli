@@ -27,11 +27,15 @@ Reliable, typed access to every AI Ark API endpoint from the command line, with 
 
 ### Active (v1.1)
 
-- [ ] Auto-persist all API results to `~/.ai-ark/results/` on every data command
-- [ ] `--output <file>` explicit save flag on all data commands
-- [ ] Field tier classification system (Tier 1/2/3) with `FIELD-TIERS.md` documentation
-- [ ] `--profile outbound|research|raw` output filter flag
 - [ ] `people pipeline` command chaining search → export → find-emails with auto-persist
+
+### Validated (v1.1 — Phase 5 complete 2026-04-29)
+
+- [x] Auto-persist all API results to `~/.ai-ark/results/` on every data command
+- [x] `--output <file>` explicit save flag on all data commands
+- [x] `--no-save` flag to suppress auto-save on any data command
+- [x] Field tier classification system (Tier 1/2/3) with `docs/FIELD-TIERS.md` documentation
+- [x] `--profile outbound|raw` output filter flag on all 7 data commands (default: outbound = Tier 1 fields only)
 
 ### Validated (v1.0)
 
@@ -104,4 +108,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-29 — milestone v1.1 started*
+*Last updated: 2026-04-29 — Phase 5 complete (persistence + tier filter, 13/13 verified)*
