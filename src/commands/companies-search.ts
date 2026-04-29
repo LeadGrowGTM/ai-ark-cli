@@ -5,8 +5,8 @@
 
 import { Command } from "commander";
 import { createClient, AiArkApiError } from "../client/index.js";
-import { formatOutput, readCsvFile, readStdin, pushToClay, persistResults } from "../io/index.js";
-import type { OutputFormat } from "../io/index.js";
+import { formatOutput, readCsvFile, readStdin, pushToClay, persistResults, filterByProfile } from "../io/index.js";
+import type { OutputFormat, Profile } from "../io/index.js";
 import { buildAccountFilter } from "../filters.js";
 import type { FilterOpts } from "../filters.js";
 import { printReviewUrl, buildSearchUrl } from "../url-builder.js";
@@ -45,6 +45,7 @@ export function companiesSearchCommand(): Command {
     .option("--page <number>", "Page number (0-based)", "0")
     .option("--size <number>", "Results per page (1-100)", "10")
     .option("--format <type>", "Output format: json, csv, table", "json")
+    .option("--profile <name>", "Output shape: outbound (Tier 1 fields, default) or raw (full API response)", "outbound")
     .option("--input <file>", "CSV file for batch input")
     .option("--domain-col <name>", "Column name for domain in CSV", "domain")
     .option("--clay-table <id>", "Push results to a Clay table")
@@ -86,6 +87,13 @@ export function companiesSearchCommand(): Command {
           printReviewUrl(filterOpts, "companies");
         }
 
+        // Validate profile
+        const profile = opts.profile as Profile;
+        if (profile !== "outbound" && profile !== "raw") {
+          console.error(`Error: --profile must be "outbound" or "raw" (got "${profile}")`);
+          process.exit(1);
+        }
+
         if (opts.dryRun) {
           const body: CompanySearchRequest = {
             page: parseInt(opts.page, 10),
@@ -113,16 +121,17 @@ export function companiesSearchCommand(): Command {
             const result = await client.post<CompanySearchResponse>("/companies", body);
             allResults.push(...result.content);
           }
+          const filtered = filterByProfile(allResults, "company", profile);
           persistResults({
-            data: allResults,
+            data: filtered,
             command: "companies-search",
             output: opts.output,
             noSave: opts.save === false,
           });
           if (opts.clayTable) {
-            pushToClay(opts.clayTable, allResults);
+            pushToClay(opts.clayTable, filtered as unknown[]);
           }
-          formatOutput(allResults, format);
+          formatOutput(filtered, format);
           return;
         }
 
@@ -141,17 +150,21 @@ export function companiesSearchCommand(): Command {
 
         const result = await client.post<CompanySearchResponse>("/companies", body);
 
-        const dataToOutput = format === "json" ? result : result.content;
+        const rawData = format === "json" ? result : result.content;
+        const filtered = filterByProfile(rawData, "company", profile);
         persistResults({
-          data: dataToOutput,
+          data: filtered,
           command: "companies-search",
           output: opts.output,
           noSave: opts.save === false,
         });
         if (opts.clayTable) {
-          pushToClay(opts.clayTable, result.content);
+          pushToClay(
+            opts.clayTable,
+            Array.isArray(filtered) ? filtered : ((filtered as any).content ?? [filtered]),
+          );
         }
-        formatOutput(dataToOutput, format);
+        formatOutput(filtered, format);
       } catch (error) {
         if (error instanceof AiArkApiError) {
           console.error(`Error: ${error.message}`);

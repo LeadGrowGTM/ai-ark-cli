@@ -5,8 +5,8 @@
 
 import { Command } from "commander";
 import { createClient, AiArkApiError } from "../client/index.js";
-import { formatOutput, persistResults } from "../io/index.js";
-import type { OutputFormat } from "../io/index.js";
+import { formatOutput, persistResults, filterByProfile } from "../io/index.js";
+import type { OutputFormat, Profile } from "../io/index.js";
 import type {
   MobilePhoneRequest,
   MobilePhoneResponse,
@@ -20,6 +20,7 @@ export function peoplePhoneCommand(): Command {
     .option("--name <name>", "Person full name (use with --domain)")
     .option("--type <type>", "Phone type to find", "personal")
     .option("--format <type>", "Output format: json, csv, table", "json")
+    .option("--profile <name>", "Output shape: outbound (Tier 1 fields, default) or raw (full API response)", "outbound")
     .option("--clay-table <id>", "Push results to a Clay table")
     .option("--output <file>", "Write results to this exact path instead of ~/.ai-ark/results/")
     .option("--no-save", "Skip auto-save to ~/.ai-ark/results/")
@@ -32,6 +33,12 @@ export function peoplePhoneCommand(): Command {
 
         const client = createClient();
         const format = opts.format as OutputFormat;
+
+        const profile = opts.profile as Profile;
+        if (profile !== "outbound" && profile !== "raw") {
+          console.error(`Error: --profile must be "outbound" or "raw" (got "${profile}")`);
+          process.exit(1);
+        }
 
         const body: MobilePhoneRequest = {
           type: opts.type,
@@ -52,18 +59,19 @@ export function peoplePhoneCommand(): Command {
           body,
         );
 
-        const dataToOutput = format === "json" ? result : result.phones;
+        const rawData = format === "json" ? result : result.phones;
+        const filtered = filterByProfile(rawData, "person", profile);
         persistResults({
-          data: dataToOutput,
+          data: filtered,
           command: "people-phone",
           output: opts.output,
           noSave: opts.save === false,
         });
         if (opts.clayTable) {
           const { pushToClay } = await import("../io/index.js");
-          pushToClay(opts.clayTable, result.phones);
+          pushToClay(opts.clayTable, Array.isArray(filtered) ? filtered : [filtered]);
         }
-        formatOutput(dataToOutput, format);
+        formatOutput(filtered, format);
       } catch (error) {
         if (error instanceof AiArkApiError) {
           console.error(`Error: ${error.message}`);

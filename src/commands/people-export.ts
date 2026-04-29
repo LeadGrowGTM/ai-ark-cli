@@ -6,8 +6,8 @@
 
 import { Command } from "commander";
 import { createClient, AiArkApiError, pollUntilDone } from "../client/index.js";
-import { formatOutput, pushToClay, persistResults } from "../io/index.js";
-import type { OutputFormat } from "../io/index.js";
+import { formatOutput, pushToClay, persistResults, filterByProfile } from "../io/index.js";
+import type { OutputFormat, Profile } from "../io/index.js";
 import { buildAccountFilter, buildContactFilter } from "../filters.js";
 import type { FilterOpts } from "../filters.js";
 import { printReviewUrl, buildSearchUrl } from "../url-builder.js";
@@ -58,6 +58,7 @@ export function peopleExportCommand(): Command {
     .option("--match-mode <mode>", "Search mode: SMART, WORD, STRICT", "SMART")
     .option("--size <number>", "Max people to export (1-10000)", "100")
     .option("--format <type>", "Output format: json, csv, table", "json")
+    .option("--profile <name>", "Output shape: outbound (Tier 1 fields, default) or raw (full API response)", "outbound")
     .option("--clay-table <id>", "Push results to a Clay table")
     .option("--output <file>", "Write results to this exact path instead of ~/.ai-ark/results/")
     .option("--no-save", "Skip auto-save to ~/.ai-ark/results/")
@@ -73,6 +74,13 @@ export function peopleExportCommand(): Command {
         filterOpts.excludeContactName = opts.excludeName;
         filterOpts.contactKeyword = opts.keyword;
         filterOpts.keyword = undefined;
+
+        // Validate profile early
+        const profile = opts.profile as Profile;
+        if (profile !== "outbound" && profile !== "raw") {
+          console.error(`Error: --profile must be "outbound" or "raw" (got "${profile}")`);
+          process.exit(1);
+        }
 
         const body: ExportPeopleRequest = {
           page: 0,
@@ -139,16 +147,17 @@ export function peopleExportCommand(): Command {
           page++;
         }
 
+        const filtered = filterByProfile(allResults, "person", profile);
         persistResults({
-          data: allResults,
+          data: filtered,
           command: "people-export",
           output: opts.output,
           noSave: opts.save === false,
         });
         if (opts.clayTable) {
-          pushToClay(opts.clayTable, allResults);
+          pushToClay(opts.clayTable, filtered as unknown[]);
         }
-        formatOutput(allResults, format);
+        formatOutput(filtered, format);
       } catch (error) {
         if (error instanceof AiArkApiError) {
           console.error(`Error: ${error.message}`);

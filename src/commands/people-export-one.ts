@@ -6,8 +6,8 @@
 
 import { Command } from "commander";
 import { createClient, AiArkApiError } from "../client/index.js";
-import { formatOutput, persistResults } from "../io/index.js";
-import type { OutputFormat } from "../io/index.js";
+import { formatOutput, persistResults, filterByProfile } from "../io/index.js";
+import type { OutputFormat, Profile } from "../io/index.js";
 import type { ExportSingleRequest } from "../types/api.js";
 
 export function peopleExportOneCommand(): Command {
@@ -16,6 +16,7 @@ export function peopleExportOneCommand(): Command {
     .option("--id <aiArkPersonId>", "AI Ark person ID (from people search results)")
     .option("--linkedin <url>", "LinkedIn profile URL")
     .option("--format <type>", "Output format: json, csv, table", "json")
+    .option("--profile <name>", "Output shape: outbound (Tier 1 fields, default) or raw (full API response)", "outbound")
     .option("--clay-table <id>", "Push result to a Clay table")
     .option("--output <file>", "Write results to this exact path instead of ~/.ai-ark/results/")
     .option("--no-save", "Skip auto-save to ~/.ai-ark/results/")
@@ -29,6 +30,12 @@ export function peopleExportOneCommand(): Command {
         const client = createClient();
         const format = opts.format as OutputFormat;
 
+        const profile = opts.profile as Profile;
+        if (profile !== "outbound" && profile !== "raw") {
+          console.error(`Error: --profile must be "outbound" or "raw" (got "${profile}")`);
+          process.exit(1);
+        }
+
         const body: ExportSingleRequest = {};
         if (opts.id) body.id = opts.id;
         if (opts.linkedin) body.url = opts.linkedin;
@@ -38,17 +45,18 @@ export function peopleExportOneCommand(): Command {
           body,
         );
 
+        const filtered = filterByProfile(result, "person", profile);
         persistResults({
-          data: result,
+          data: filtered,
           command: "people-export-one",
           output: opts.output,
           noSave: opts.save === false,
         });
         if (opts.clayTable) {
           const { pushToClay } = await import("../io/index.js");
-          pushToClay(opts.clayTable, [result]);
+          pushToClay(opts.clayTable, [filtered]);
         }
-        formatOutput(result, format);
+        formatOutput(filtered, format);
       } catch (error) {
         if (error instanceof AiArkApiError) {
           console.error(`Error: ${error.message}`);

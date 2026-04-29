@@ -5,8 +5,8 @@
 
 import { Command } from "commander";
 import { createClient, AiArkApiError } from "../client/index.js";
-import { formatOutput, persistResults } from "../io/index.js";
-import type { OutputFormat } from "../io/index.js";
+import { formatOutput, persistResults, filterByProfile } from "../io/index.js";
+import type { OutputFormat, Profile } from "../io/index.js";
 import type {
   ReverseLookupRequest,
   ReverseLookupResponse,
@@ -17,6 +17,7 @@ export function peopleLookupCommand(): Command {
     .description("Reverse lookup by email or phone")
     .requiredOption("--email <email>", "Email address to look up")
     .option("--format <type>", "Output format: json, csv, table", "json")
+    .option("--profile <name>", "Output shape: outbound (Tier 1 fields, default) or raw (full API response)", "outbound")
     .option("--clay-table <id>", "Push results to a Clay table")
     .option("--output <file>", "Write results to this exact path instead of ~/.ai-ark/results/")
     .option("--no-save", "Skip auto-save to ~/.ai-ark/results/")
@@ -24,6 +25,12 @@ export function peopleLookupCommand(): Command {
       try {
         const client = createClient();
         const format = opts.format as OutputFormat;
+
+        const profile = opts.profile as Profile;
+        if (profile !== "outbound" && profile !== "raw") {
+          console.error(`Error: --profile must be "outbound" or "raw" (got "${profile}")`);
+          process.exit(1);
+        }
 
         const body: ReverseLookupRequest = {
           kind: "CONTACT",
@@ -35,17 +42,18 @@ export function peopleLookupCommand(): Command {
           body,
         );
 
+        const filtered = filterByProfile(result, "person", profile);
         persistResults({
-          data: result,
+          data: filtered,
           command: "people-lookup",
           output: opts.output,
           noSave: opts.save === false,
         });
         if (opts.clayTable) {
           const { pushToClay } = await import("../io/index.js");
-          pushToClay(opts.clayTable, [result]);
+          pushToClay(opts.clayTable, [filtered]);
         }
-        formatOutput(result, format);
+        formatOutput(filtered, format);
       } catch (error) {
         if (error instanceof AiArkApiError) {
           console.error(`Error: ${error.message}`);
