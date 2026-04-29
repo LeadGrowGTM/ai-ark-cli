@@ -12,7 +12,7 @@
 | 2 | Core Commands | All 6 synchronous endpoint commands working end-to-end | CMD-01, CMD-02, CMD-03, CMD-04, CMD-05, CMD-06 | 6 |
 | 3 | Async Workflows | Export people and email finder with auto-polling and progress | ASYNC-01, ASYNC-02, ASYNC-03, ASYNC-04 | 4 |
 | 4 | I/O Pipeline | CSV/stdin input, multi-format output, Clay integration | INPUT-01, INPUT-02, INPUT-03, OUT-01, OUT-02, OUT-03, OUT-04 | 7 |
-| 5 | Persistence & Tiers | 2/2 | Complete   | 2026-04-29 |
+| 5 | Persistence & Tiers | 2/2 | Complete    | 2026-04-29 |
 | 6 | Pipeline Command | One-command search → export → find-emails with full output | PIPELINE-01, PIPELINE-02, PIPELINE-03, PIPELINE-04 | 4 |
 
 ---
