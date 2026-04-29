@@ -1,7 +1,7 @@
 # Roadmap: AI Ark CLI
 
 **Created:** 2026-03-31
-**Phases:** 7 (4 v1.0 complete + 3 v1.1 planned)
+**Phases:** 6 (4 v1.0 complete + 2 v1.1 planned)
 **Requirements:** 40 mapped (24 v1.0 + 16 v1.1)
 
 ## Phase Overview
@@ -12,9 +12,8 @@
 | 2 | Core Commands | All 6 synchronous endpoint commands working end-to-end | CMD-01, CMD-02, CMD-03, CMD-04, CMD-05, CMD-06 | 6 |
 | 3 | Async Workflows | Export people and email finder with auto-polling and progress | ASYNC-01, ASYNC-02, ASYNC-03, ASYNC-04 | 4 |
 | 4 | I/O Pipeline | CSV/stdin input, multi-format output, Clay integration | INPUT-01, INPUT-02, INPUT-03, OUT-01, OUT-02, OUT-03, OUT-04 | 7 |
-| 5 | Normalization Layer | Clean, flat response schema replacing raw API noise | NORM-01, NORM-02, NORM-03, NORM-04 | 3 |
-| 6 | Persistence & Tiers | Auto-save every result + field tier filtering via --profile | PERSIST-01, PERSIST-02, PERSIST-03, PERSIST-04, TIER-01, TIER-02, TIER-03, TIER-04 | 5 |
-| 7 | Pipeline Command | One-command search → export → find-emails with full output | PIPELINE-01, PIPELINE-02, PIPELINE-03, PIPELINE-04 | 4 |
+| 5 | Persistence & Tiers | Auto-save every result + field tier filtering via --profile | PERSIST-01, PERSIST-02, PERSIST-03, PERSIST-04, TIER-01, TIER-02, TIER-03, TIER-04 | 5 |
+| 6 | Pipeline Command | One-command search → export → find-emails with full output | PIPELINE-01, PIPELINE-02, PIPELINE-03, PIPELINE-04 | 4 |
 
 ---
 
@@ -24,9 +23,8 @@
 - [x] **Phase 2: Core Commands** - All 6 sync endpoint commands working end-to-end
 - [x] **Phase 3: Async Workflows** - Export people and email finder with auto-polling and progress
 - [x] **Phase 4: I/O Pipeline** - CSV/stdin input, multi-format output, Clay integration
-- [ ] **Phase 5: Normalization Layer** - Clean, flat response schema replacing raw API noise
-- [ ] **Phase 6: Persistence & Tiers** - Auto-save every result + field tier filtering via --profile
-- [ ] **Phase 7: Pipeline Command** - One-command search → export → find-emails with full output
+- [ ] **Phase 5: Persistence & Tiers** - Auto-save every result + field tier filtering via --profile
+- [ ] **Phase 6: Pipeline Command** - One-command search → export → find-emails with full output
 
 ---
 
@@ -108,7 +106,9 @@ Normalization handled in skill layer above the CLI. CLI stays dumb. NORM-01–04
   3. `--profile outbound` output contains only Tier 1 fields, normalized — no S3 URLs, no null-heavy arrays, no pagination metadata
   4. `--profile raw` output is byte-for-byte identical to what the API returned — existing pipe workflows are unaffected
   5. `docs/FIELD-TIERS.md` documents the tier assignment for every API response field
-**Plans**: TBD
+**Plans**: 2 plans
+- [ ] 05-01-PLAN.md — Persistence module + auto-save wired into all 7 data commands
+- [ ] 05-02-PLAN.md — Tier filter + --profile flag + finalized FIELD-TIERS.md
 **UI hint**: no
 
 ### Phase 6: Pipeline Command
@@ -146,10 +146,9 @@ All 16 v1.1 requirements mapped. 0 unmapped.
 
 | Category | Count | Phase |
 |----------|-------|-------|
-| Normalization (NORM) | 4 | 5 |
-| Persistence (PERSIST) | 4 | 6 |
-| Field Tiers (TIER) | 4 | 6 |
-| Pipeline (PIPELINE) | 4 | 7 |
+| Persistence (PERSIST) | 4 | 5 |
+| Field Tiers (TIER) | 4 | 5 |
+| Pipeline (PIPELINE) | 4 | 6 |
 
 ---
 
@@ -161,10 +160,9 @@ All 16 v1.1 requirements mapped. 0 unmapped.
 | 2. Core Commands | 1/1 | Complete | 2026-04-10 |
 | 3. Async Workflows | 1/1 | Complete | 2026-04-17 |
 | 4. I/O Pipeline | 1/1 | Complete | 2026-04-29 |
-| 5. Normalization Layer | 0/TBD | Not started | - |
-| 6. Persistence & Tiers | 0/TBD | Not started | - |
-| 7. Pipeline Command | 0/TBD | Not started | - |
+| 5. Persistence & Tiers | 0/2 | Not started | - |
+| 6. Pipeline Command | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-03-31*
-*Last updated: 2026-04-29 — v1.1 phases 5-7 added (NORM, PERSIST+TIER, PIPELINE)*
+*Last updated: 2026-04-29 — NORM dropped (skill layer); renumbered to 2 v1.1 phases (5: PERSIST+TIER, 6: PIPELINE)*
