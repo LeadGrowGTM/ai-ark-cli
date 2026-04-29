@@ -8,27 +8,46 @@ A composable command-line tool that wraps the AI Ark API for people search and d
 
 Reliable, typed access to every AI Ark API endpoint from the command line, with automatic async job management (polling, progress, result fetching) so enrichment workflows can be scripted and piped.
 
+## Current Milestone: v1.1 Data Preservation & Export Pipeline
+
+**Goal:** Make every API result persist to disk automatically and streamline the search→export→email workflow into one command.
+
+**Target features:**
+- Auto-persist: every data command saves a timestamped file to `~/.ai-ark/results/` (opt-out via `--no-save`)
+- `--output <file>` flag on all data commands for explicit saves
+- Field tier classification (Tier 1 = GTM gold, Tier 2 = research-useful, Tier 3 = noise/expiring), documented in `FIELD-TIERS.md`
+- `--profile outbound|research|raw` flag filters output to the right tier subset
+- `people pipeline` command: chains search → export → find-emails in one call with auto-persist
+
 ## Requirements
 
 ### Validated
 
 (None yet — ship to validate)
 
-### Active
+### Active (v1.1)
 
-- [ ] Wrap all 14 AI Ark API endpoints as CLI commands
+- [ ] Auto-persist all API results to `~/.ai-ark/results/` on every data command
+- [ ] `--output <file>` explicit save flag on all data commands
+- [ ] Field tier classification system (Tier 1/2/3) with `FIELD-TIERS.md` documentation
+- [ ] `--profile outbound|research|raw` output filter flag
+- [ ] `people pipeline` command chaining search → export → find-emails with auto-persist
+
+### Validated (v1.0)
+
+- [x] Wrap all 14 AI Ark API endpoints as CLI commands
 - [ ] CSV input for batch enrichment jobs
 - [ ] Stdin/pipe input for tool chaining
-- [ ] CSV output format
-- [ ] JSON output format
-- [ ] Console table output for quick review
-- [ ] Direct Clay table push
-- [ ] Auto-polling for async export people workflow (submit -> poll -> fetch results with progress)
-- [ ] Auto-polling for async email finder workflow (submit -> poll -> fetch results with progress)
-- [ ] Full TypeScript types for all API request/response schemas
-- [ ] Auth via AI_ARK_API_KEY environment variable
-- [ ] Rate limit handling (5/sec, 300/min, 18K/hr)
-- [ ] Schema examples captured from real API responses for reference
+- [x] CSV output format
+- [x] JSON output format
+- [x] Console table output for quick review
+- [x] Direct Clay table push
+- [x] Auto-polling for async export people workflow (submit -> poll -> fetch results with progress)
+- [x] Auto-polling for async email finder workflow (submit -> poll -> fetch results with progress)
+- [x] Full TypeScript types for all API request/response schemas
+- [x] Auth via AI_ARK_API_KEY environment variable
+- [x] Rate limit handling (5/sec, 300/min, 18K/hr)
+- [x] Schema examples captured from real API responses for reference
 
 ### Out of Scope
 
@@ -85,4 +104,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-26 after initialization*
+*Last updated: 2026-04-29 — milestone v1.1 started*
