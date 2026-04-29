@@ -139,12 +139,28 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OUT-02 | Phase 4 | Complete (04-01) |
 | OUT-03 | Phase 4 | Complete (04-01) |
 | OUT-04 | Phase 4 | Complete (04-01) |
+| NORM-01 | Phase 5 | Pending |
+| NORM-02 | Phase 5 | Pending |
+| NORM-03 | Phase 5 | Pending |
+| NORM-04 | Phase 5 | Pending |
+| PERSIST-01 | Phase 6 | Pending |
+| PERSIST-02 | Phase 6 | Pending |
+| PERSIST-03 | Phase 6 | Pending |
+| PERSIST-04 | Phase 6 | Pending |
+| TIER-01 | Phase 6 | Pending |
+| TIER-02 | Phase 6 | Pending |
+| TIER-03 | Phase 6 | Pending |
+| TIER-04 | Phase 6 | Pending |
+| PIPELINE-01 | Phase 7 | Pending |
+| PIPELINE-02 | Phase 7 | Pending |
+| PIPELINE-03 | Phase 7 | Pending |
+| PIPELINE-04 | Phase 7 | Pending |
 
 **Coverage:**
-- v1 requirements: 24 total
-- Mapped to phases: 24
-- Unmapped: 0
+- v1 requirements: 24 total — mapped to phases: 24 — unmapped: 0
+- v1.1 requirements: 16 total — mapped to phases: 16 — unmapped: 0
+- Total: 40 requirements, 40 mapped, 0 orphans
 
 ---
 *Requirements defined: 2026-03-31*
-*Last updated: 2026-04-29 — v1.1 requirements added (PERSIST, NORM, TIERS, PIPELINE)*
+*Last updated: 2026-04-29 — v1.1 requirements added (PERSIST, NORM, TIERS, PIPELINE) + traceability updated for phases 5-7*
