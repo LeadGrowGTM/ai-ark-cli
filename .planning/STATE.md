@@ -1,14 +1,15 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.1
-milestone_name: Data Preservation & Export Pipeline
-status: Planning
-last_updated: "2026-04-29T00:00:00.000Z"
+milestone_name: Phases
+status: executing
+last_updated: "2026-04-29T20:57:01.396Z"
+last_activity: 2026-04-29
 progress:
-  total_phases: 2
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_phases: 6
+  completed_phases: 1
+  total_plans: 4
+  completed_plans: 3
 ---
 
 # Project State: AI Ark CLI — v1.1
@@ -21,17 +22,24 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 
 ## Current Position
 
-Phase: Phase 5 (next to start)
-Plan: —
-Status: Roadmap complete, ready to plan Phase 5
-Last activity: 2026-04-29 — Phase 5 (old normalization) dropped; renumbered to 2 phases (5, 6)
+Phase: 05 (persistence-tiers) — EXECUTING
+Plan: 2 of 2
+Status: Executing Phase 05 Plan 2
+Last activity: 2026-04-29 — 05-01 complete (auto-persistence module + 7 command wiring)
+Last session: 2026-04-29T20:57Z — Completed 05-01-PLAN.md
 
 ## v1.1 Phase Summary
 
 | Phase | Name | Requirements | Status |
 |-------|------|--------------|--------|
-| 5 | Persistence & Tiers | PERSIST-01–04, TIER-01–04 | Not started |
+| 5 | Persistence & Tiers | PERSIST-01–04, TIER-01–04 | In progress (1/2 plans done) |
 | 6 | Pipeline Command | PIPELINE-01–04 | Not started |
+
+## Decisions Made
+
+- **05-01**: Explicit `--output` path wins even when `--no-save` is also passed — honor user intent
+- **05-01**: `--no-wait` async branches persist `{trackId, state}` — recoverable data worth saving
+- **05-01**: Batch paths persist `allResults` once at end, not per-domain — one file per invocation
 
 ## Accumulated Context
 

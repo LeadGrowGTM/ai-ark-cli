@@ -53,10 +53,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### PERSIST — Data Persistence
 
-- [ ] **PERSIST-01**: Every data command auto-saves results to `~/.ai-ark/results/YYYY-MM-DD_HH-MM_<command>.json` on execution (default on, zero config)
-- [ ] **PERSIST-02**: User can suppress auto-save with `--no-save` flag on any data command
-- [ ] **PERSIST-03**: User can specify explicit output path with `--output <file>` on any data command
-- [ ] **PERSIST-04**: Results directory created automatically on first save — no manual setup
+- [x] **PERSIST-01**: Every data command auto-saves results to `~/.ai-ark/results/YYYY-MM-DD_HH-MM_<command>.json` on execution (default on, zero config)
+- [x] **PERSIST-02**: User can suppress auto-save with `--no-save` flag on any data command
+- [x] **PERSIST-03**: User can specify explicit output path with `--output <file>` on any data command
+- [x] **PERSIST-04**: Results directory created automatically on first save — no manual setup
 
 ### TIERS — Field Filtering
 
@@ -137,10 +137,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NORM-02 | Phase 5 | Pending |
 | NORM-03 | Phase 5 | Pending |
 | NORM-04 | Phase 5 | Pending |
-| PERSIST-01 | Phase 6 | Pending |
-| PERSIST-02 | Phase 6 | Pending |
-| PERSIST-03 | Phase 6 | Pending |
-| PERSIST-04 | Phase 6 | Pending |
+| PERSIST-01 | Phase 6 | Complete |
+| PERSIST-02 | Phase 6 | Complete |
+| PERSIST-03 | Phase 6 | Complete |
+| PERSIST-04 | Phase 6 | Complete |
 | TIER-01 | Phase 6 | Pending |
 | TIER-02 | Phase 6 | Pending |
 | TIER-03 | Phase 6 | Pending |

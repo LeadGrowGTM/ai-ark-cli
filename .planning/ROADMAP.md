@@ -12,7 +12,7 @@
 | 2 | Core Commands | All 6 synchronous endpoint commands working end-to-end | CMD-01, CMD-02, CMD-03, CMD-04, CMD-05, CMD-06 | 6 |
 | 3 | Async Workflows | Export people and email finder with auto-polling and progress | ASYNC-01, ASYNC-02, ASYNC-03, ASYNC-04 | 4 |
 | 4 | I/O Pipeline | CSV/stdin input, multi-format output, Clay integration | INPUT-01, INPUT-02, INPUT-03, OUT-01, OUT-02, OUT-03, OUT-04 | 7 |
-| 5 | Persistence & Tiers | Auto-save every result + field tier filtering via --profile | PERSIST-01, PERSIST-02, PERSIST-03, PERSIST-04, TIER-01, TIER-02, TIER-03, TIER-04 | 5 |
+| 5 | Persistence & Tiers | 1/2 | In Progress|  |
 | 6 | Pipeline Command | One-command search → export → find-emails with full output | PIPELINE-01, PIPELINE-02, PIPELINE-03, PIPELINE-04 | 4 |
 
 ---
@@ -107,7 +107,7 @@ Normalization handled in skill layer above the CLI. CLI stays dumb. NORM-01–04
   4. `--profile raw` output is byte-for-byte identical to what the API returned — existing pipe workflows are unaffected
   5. `docs/FIELD-TIERS.md` documents the tier assignment for every API response field
 **Plans**: 2 plans
-- [ ] 05-01-PLAN.md — Persistence module + auto-save wired into all 7 data commands
+- [x] 05-01-PLAN.md — Persistence module + auto-save wired into all 7 data commands
 - [ ] 05-02-PLAN.md — Tier filter + --profile flag + finalized FIELD-TIERS.md
 **UI hint**: no
 
