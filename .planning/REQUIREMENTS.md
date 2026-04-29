@@ -49,6 +49,40 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **OUT-03**: Console table output via --format table for quick review
 - [x] **OUT-04**: Direct Clay table push via --clay-table flag (uses Clay CLI under the hood)
 
+## v1.1 Requirements
+
+### PERSIST — Data Persistence
+
+- [ ] **PERSIST-01**: Every data command auto-saves results to `~/.ai-ark/results/YYYY-MM-DD_HH-MM_<command>.json` on execution (default on, zero config)
+- [ ] **PERSIST-02**: User can suppress auto-save with `--no-save` flag on any data command
+- [ ] **PERSIST-03**: User can specify explicit output path with `--output <file>` on any data command
+- [ ] **PERSIST-04**: Results directory created automatically on first save — no manual setup
+
+### NORM — Data Normalization
+
+- [ ] **NORM-01**: `profile.last_name` / `profile.full_name` cleaned — strips LinkedIn junk (credential suffixes, parentheticals like ", CFE (CEO of X)")
+- [ ] **NORM-02**: Current position flattened to top-level fields: `current_company`, `current_company_domain`, `current_company_linkedin`, `current_title`, `current_role_start` (first position_group where date.end is null)
+- [ ] **NORM-03**: Revenue merged to formatted `revenue_range` string (e.g., `"$1M–$5M"`) instead of separate start/end numbers
+- [ ] **NORM-04**: Normalized output schema documented in `docs/OUTPUT-SCHEMA.md`
+
+### TIERS — Field Filtering
+
+- [ ] **TIER-01**: Default output (and auto-persisted files) strips all non-Tier-1 fields — expiring S3 URLs, null-heavy fields, pagination metadata
+- [ ] **TIER-02**: `--profile raw` bypasses all filtering and normalization — full API response as-is (preserves existing pipe behavior)
+- [ ] **TIER-03**: `--profile outbound` (new default when saving) returns Tier 1 fields only, normalized
+- [ ] **TIER-04**: `docs/FIELD-TIERS.md` finalized with all tier assignments and normalization decisions
+
+**Tier 1 fields (outbound gold):**
+- Person: `first_name`, `last_name` (cleaned), `headline`, `title`, `link.linkedin`, `location.city`, `location.state`, `location.country`, `industry`, `profile.summary`, `current_company`, `current_company_domain`, `current_company_linkedin`, `current_title`, `current_role_start`, `skills`, `member_badges` (all 4), `department.seniority`, `email`, `emailVerified`, `phones[].phoneNumber`, `last_updated`
+- Company: `id`, `summary.description`, `summary.overview`, `summary.seo`, `summary.staff.total`, `link.domain`, `link.linkedin`, `contact.email`, `revenue_range`, `financial.funding.type`, `financial.funding.total_amount`, `financial.funding.last_amount`, `financial.funding.num_investor`, `financial.funding.rounds[].investors`, `location.headquarter.raw_address`, `technologies[]`, `industries[]`, `keywords[]`, `last_updated`
+
+### PIPELINE — Chained Workflow Command
+
+- [ ] **PIPELINE-01**: `people pipeline` command runs search → export → find-emails sequentially — no manual trackId passing
+- [ ] **PIPELINE-02**: Pipeline accepts all filter flags from `people search`
+- [ ] **PIPELINE-03**: Per-stage progress to stderr: `[1/3] Searching...`, `[2/3] Exporting...`, `[3/3] Finding emails...` with record counts
+- [ ] **PIPELINE-04**: Pipeline output is normalized (NORM applied), Tier 1 filtered, auto-persisted
+
 ## v2 Requirements
 
 Deferred to future release. Tracked but not in current roadmap.
@@ -113,4 +147,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-31*
-*Last updated: 2026-03-31 after Phase 4 completion — ALL v1 REQUIREMENTS COMPLETE*
+*Last updated: 2026-04-29 — v1.1 requirements added (PERSIST, NORM, TIERS, PIPELINE)*
