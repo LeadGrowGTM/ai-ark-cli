@@ -6,7 +6,7 @@
 
 import { Command } from "commander";
 import { createClient, AiArkApiError } from "../client/index.js";
-import { formatOutput } from "../io/index.js";
+import { formatOutput, persistResults } from "../io/index.js";
 import type { OutputFormat } from "../io/index.js";
 import type { ExportSingleRequest } from "../types/api.js";
 
@@ -17,6 +17,8 @@ export function peopleExportOneCommand(): Command {
     .option("--linkedin <url>", "LinkedIn profile URL")
     .option("--format <type>", "Output format: json, csv, table", "json")
     .option("--clay-table <id>", "Push result to a Clay table")
+    .option("--output <file>", "Write results to this exact path instead of ~/.ai-ark/results/")
+    .option("--no-save", "Skip auto-save to ~/.ai-ark/results/")
     .action(async (opts) => {
       if (!opts.id && !opts.linkedin) {
         console.error("Error: provide --id or --linkedin");
@@ -36,6 +38,12 @@ export function peopleExportOneCommand(): Command {
           body,
         );
 
+        persistResults({
+          data: result,
+          command: "people-export-one",
+          output: opts.output,
+          noSave: opts.save === false,
+        });
         if (opts.clayTable) {
           const { pushToClay } = await import("../io/index.js");
           pushToClay(opts.clayTable, [result]);

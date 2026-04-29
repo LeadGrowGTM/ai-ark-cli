@@ -6,7 +6,7 @@
 
 import { Command } from "commander";
 import { createClient, AiArkApiError, pollUntilDone } from "../client/index.js";
-import { formatOutput, pushToClay } from "../io/index.js";
+import { formatOutput, pushToClay, persistResults } from "../io/index.js";
 import type { OutputFormat } from "../io/index.js";
 import type {
   EmailFinderRequest,
@@ -21,6 +21,8 @@ export function peopleFindEmailsCommand(): Command {
     .requiredOption("--track-id <id>", "Track ID from a people search response")
     .option("--format <type>", "Output format: json, csv, table", "json")
     .option("--clay-table <id>", "Push results to a Clay table")
+    .option("--output <file>", "Write results to this exact path instead of ~/.ai-ark/results/")
+    .option("--no-save", "Skip auto-save to ~/.ai-ark/results/")
     .option("--no-wait", "Return immediately without polling")
     .action(async (opts) => {
       try {
@@ -35,7 +37,14 @@ export function peopleFindEmailsCommand(): Command {
         const job = await client.post<EmailFinderStatistics>("/people/email-finder", body);
 
         if (!opts.wait) {
-          formatOutput({ trackId: opts.trackId, state: job.state }, format);
+          const noWaitData = { trackId: opts.trackId, state: job.state };
+          persistResults({
+            data: noWaitData,
+            command: "people-find-emails",
+            output: opts.output,
+            noSave: opts.save === false,
+          });
+          formatOutput(noWaitData, format);
           return;
         }
 
@@ -65,6 +74,12 @@ export function peopleFindEmailsCommand(): Command {
           page++;
         }
 
+        persistResults({
+          data: allResults,
+          command: "people-find-emails",
+          output: opts.output,
+          noSave: opts.save === false,
+        });
         if (opts.clayTable) {
           pushToClay(opts.clayTable, allResults);
         }

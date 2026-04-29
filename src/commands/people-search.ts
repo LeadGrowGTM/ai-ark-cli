@@ -5,7 +5,7 @@
 
 import { Command } from "commander";
 import { createClient, AiArkApiError } from "../client/index.js";
-import { formatOutput, readCsvFile, readStdin, pushToClay } from "../io/index.js";
+import { formatOutput, readCsvFile, readStdin, pushToClay, persistResults } from "../io/index.js";
 import type { OutputFormat } from "../io/index.js";
 import { buildAccountFilter, buildContactFilter } from "../filters.js";
 import type { FilterOpts } from "../filters.js";
@@ -60,6 +60,8 @@ export function peopleSearchCommand(): Command {
     .option("--input <file>", "CSV file for batch input")
     .option("--domain-col <name>", "Column name for domain in CSV", "domain")
     .option("--clay-table <id>", "Push results to a Clay table")
+    .option("--output <file>", "Write results to this exact path instead of ~/.ai-ark/results/")
+    .option("--no-save", "Skip auto-save to ~/.ai-ark/results/")
     .option("--dry-run", "Print review URL + filter payload without calling the API")
     .option("--no-review-url", "Suppress the 🔗 Review URL printed to stderr")
     .action(async (opts) => {
@@ -136,6 +138,12 @@ export function peopleSearchCommand(): Command {
             const result = await client.post<PeopleSearchResponse>("/people", body);
             allResults.push(...result.content);
           }
+          persistResults({
+            data: allResults,
+            command: "people-search",
+            output: opts.output,
+            noSave: opts.save === false,
+          });
           if (opts.clayTable) {
             pushToClay(opts.clayTable, allResults);
           }
@@ -159,10 +167,17 @@ export function peopleSearchCommand(): Command {
 
         const result = await client.post<PeopleSearchResponse>("/people", body);
 
+        const dataToOutput = format === "json" ? result : result.content;
+        persistResults({
+          data: dataToOutput,
+          command: "people-search",
+          output: opts.output,
+          noSave: opts.save === false,
+        });
         if (opts.clayTable) {
           pushToClay(opts.clayTable, result.content);
         }
-        formatOutput(format === "json" ? result : result.content, format);
+        formatOutput(dataToOutput, format);
 
         // Restore keyword
         filterOpts.keyword = savedKeyword;

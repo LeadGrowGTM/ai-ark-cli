@@ -5,7 +5,7 @@
 
 import { Command } from "commander";
 import { createClient, AiArkApiError } from "../client/index.js";
-import { formatOutput } from "../io/index.js";
+import { formatOutput, persistResults } from "../io/index.js";
 import type { OutputFormat } from "../io/index.js";
 import type {
   ReverseLookupRequest,
@@ -18,6 +18,8 @@ export function peopleLookupCommand(): Command {
     .requiredOption("--email <email>", "Email address to look up")
     .option("--format <type>", "Output format: json, csv, table", "json")
     .option("--clay-table <id>", "Push results to a Clay table")
+    .option("--output <file>", "Write results to this exact path instead of ~/.ai-ark/results/")
+    .option("--no-save", "Skip auto-save to ~/.ai-ark/results/")
     .action(async (opts) => {
       try {
         const client = createClient();
@@ -33,6 +35,12 @@ export function peopleLookupCommand(): Command {
           body,
         );
 
+        persistResults({
+          data: result,
+          command: "people-lookup",
+          output: opts.output,
+          noSave: opts.save === false,
+        });
         if (opts.clayTable) {
           const { pushToClay } = await import("../io/index.js");
           pushToClay(opts.clayTable, [result]);

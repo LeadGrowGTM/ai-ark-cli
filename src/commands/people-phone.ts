@@ -5,7 +5,7 @@
 
 import { Command } from "commander";
 import { createClient, AiArkApiError } from "../client/index.js";
-import { formatOutput } from "../io/index.js";
+import { formatOutput, persistResults } from "../io/index.js";
 import type { OutputFormat } from "../io/index.js";
 import type {
   MobilePhoneRequest,
@@ -21,6 +21,8 @@ export function peoplePhoneCommand(): Command {
     .option("--type <type>", "Phone type to find", "personal")
     .option("--format <type>", "Output format: json, csv, table", "json")
     .option("--clay-table <id>", "Push results to a Clay table")
+    .option("--output <file>", "Write results to this exact path instead of ~/.ai-ark/results/")
+    .option("--no-save", "Skip auto-save to ~/.ai-ark/results/")
     .action(async (opts) => {
       try {
         if (!opts.linkedin && !(opts.domain && opts.name)) {
@@ -50,11 +52,18 @@ export function peoplePhoneCommand(): Command {
           body,
         );
 
+        const dataToOutput = format === "json" ? result : result.phones;
+        persistResults({
+          data: dataToOutput,
+          command: "people-phone",
+          output: opts.output,
+          noSave: opts.save === false,
+        });
         if (opts.clayTable) {
           const { pushToClay } = await import("../io/index.js");
           pushToClay(opts.clayTable, result.phones);
         }
-        formatOutput(format === "json" ? result : result.phones, format);
+        formatOutput(dataToOutput, format);
       } catch (error) {
         if (error instanceof AiArkApiError) {
           console.error(`Error: ${error.message}`);

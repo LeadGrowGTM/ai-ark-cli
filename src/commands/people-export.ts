@@ -6,7 +6,7 @@
 
 import { Command } from "commander";
 import { createClient, AiArkApiError, pollUntilDone } from "../client/index.js";
-import { formatOutput, pushToClay } from "../io/index.js";
+import { formatOutput, pushToClay, persistResults } from "../io/index.js";
 import type { OutputFormat } from "../io/index.js";
 import { buildAccountFilter, buildContactFilter } from "../filters.js";
 import type { FilterOpts } from "../filters.js";
@@ -59,6 +59,8 @@ export function peopleExportCommand(): Command {
     .option("--size <number>", "Max people to export (1-10000)", "100")
     .option("--format <type>", "Output format: json, csv, table", "json")
     .option("--clay-table <id>", "Push results to a Clay table")
+    .option("--output <file>", "Write results to this exact path instead of ~/.ai-ark/results/")
+    .option("--no-save", "Skip auto-save to ~/.ai-ark/results/")
     .option("--dry-run", "Print review URL + filter payload without submitting export")
     .option("--no-review-url", "Suppress the 🔗 Review URL printed to stderr")
     .option("--no-wait", "Return trackId immediately without polling")
@@ -100,7 +102,14 @@ export function peopleExportCommand(): Command {
         const job = await client.post<ExportJobResponse>("/people/export", body);
 
         if (!opts.wait) {
-          formatOutput({ trackId: job.trackId, state: job.state }, format);
+          const noWaitData = { trackId: job.trackId, state: job.state };
+          persistResults({
+            data: noWaitData,
+            command: "people-export",
+            output: opts.output,
+            noSave: opts.save === false,
+          });
+          formatOutput(noWaitData, format);
           return;
         }
 
@@ -130,6 +139,12 @@ export function peopleExportCommand(): Command {
           page++;
         }
 
+        persistResults({
+          data: allResults,
+          command: "people-export",
+          output: opts.output,
+          noSave: opts.save === false,
+        });
         if (opts.clayTable) {
           pushToClay(opts.clayTable, allResults);
         }
