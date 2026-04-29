@@ -60,10 +60,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### TIERS — Field Filtering
 
-- [ ] **TIER-01**: Default output (and auto-persisted files) strips all non-Tier-1 fields — expiring S3 URLs, null-heavy fields, pagination metadata
-- [ ] **TIER-02**: `--profile raw` bypasses all filtering and normalization — full API response as-is (preserves existing pipe behavior)
-- [ ] **TIER-03**: `--profile outbound` (new default when saving) returns Tier 1 fields only, normalized
-- [ ] **TIER-04**: `docs/FIELD-TIERS.md` finalized with all tier assignments and normalization decisions
+- [x] **TIER-01**: Default output (and auto-persisted files) strips all non-Tier-1 fields — expiring S3 URLs, null-heavy fields, pagination metadata
+- [x] **TIER-02**: `--profile raw` bypasses all filtering and normalization — full API response as-is (preserves existing pipe behavior)
+- [x] **TIER-03**: `--profile outbound` (new default when saving) returns Tier 1 fields only, normalized
+- [x] **TIER-04**: `docs/FIELD-TIERS.md` finalized with all tier assignments and normalization decisions
 
 **Tier 1 fields (outbound gold):**
 - Person: `first_name`, `last_name` (cleaned), `headline`, `title`, `link.linkedin`, `location.city`, `location.state`, `location.country`, `industry`, `profile.summary`, `current_company`, `current_company_domain`, `current_company_linkedin`, `current_title`, `current_role_start`, `skills`, `member_badges` (all 4), `department.seniority`, `email`, `emailVerified`, `phones[].phoneNumber`, `last_updated`
@@ -141,10 +141,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PERSIST-02 | Phase 6 | Complete |
 | PERSIST-03 | Phase 6 | Complete |
 | PERSIST-04 | Phase 6 | Complete |
-| TIER-01 | Phase 6 | Pending |
-| TIER-02 | Phase 6 | Pending |
-| TIER-03 | Phase 6 | Pending |
-| TIER-04 | Phase 6 | Pending |
+| TIER-01 | Phase 6 | Complete |
+| TIER-02 | Phase 6 | Complete |
+| TIER-03 | Phase 6 | Complete |
+| TIER-04 | Phase 6 | Complete |
 | PIPELINE-01 | Phase 7 | Pending |
 | PIPELINE-02 | Phase 7 | Pending |
 | PIPELINE-03 | Phase 7 | Pending |

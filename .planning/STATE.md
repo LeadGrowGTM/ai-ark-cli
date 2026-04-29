@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Phases
-status: executing
-last_updated: "2026-04-29T20:57:01.396Z"
+status: verifying
+last_updated: "2026-04-29T21:06:04.175Z"
 last_activity: 2026-04-29
 progress:
   total_phases: 6
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 4
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State: AI Ark CLI — v1.1
@@ -24,9 +24,9 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 
 Phase: 05 (persistence-tiers) — EXECUTING
 Plan: 2 of 2
-Status: Executing Phase 05 Plan 2
-Last activity: 2026-04-29 — 05-01 complete (auto-persistence module + 7 command wiring)
-Last session: 2026-04-29T20:57Z — Completed 05-01-PLAN.md
+Status: Phase complete — ready for verification
+Last activity: 2026-04-29
+Last session: 2026-04-29T21:06:04.171Z
 
 ## v1.1 Phase Summary
 
@@ -40,6 +40,8 @@ Last session: 2026-04-29T20:57Z — Completed 05-01-PLAN.md
 - **05-01**: Explicit `--output` path wins even when `--no-save` is also passed — honor user intent
 - **05-01**: `--no-wait` async branches persist `{trackId, state}` — recoverable data worth saving
 - **05-01**: Batch paths persist `allResults` once at end, not per-domain — one file per invocation
+- [Phase 05]: Default profile is outbound — behavior change for existing pipe workflows (--profile raw to restore API shape)
+- [Phase 05]: filterByProfile runs BEFORE persistResults — saved files always match stdout shape
 
 ## Accumulated Context
 
