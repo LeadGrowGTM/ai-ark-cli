@@ -7,3 +7,5 @@ export type { OutputFormat } from "./format.js";
 export { readCsvFile, readStdin } from "./input.js";
 export type { InputRecord } from "./input.js";
 export { pushToClay } from "./clay.js";
+export { persistResults, buildDefaultPath } from "./persist.js";
+export type { PersistOptions } from "./persist.js";
