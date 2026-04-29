@@ -120,7 +120,8 @@ Normalization handled in skill layer above the CLI. CLI stays dumb. NORM-01–04
   2. All filter flags available on `people search` work identically on `people pipeline`
   3. Stderr shows stage-labeled progress: `[1/3] Searching...`, `[2/3] Exporting...`, `[3/3] Finding emails...` with record counts at each stage
   4. Pipeline output is Tier 1 filtered and auto-persisted to `~/.ai-ark/results/`
-**Plans**: TBD
+**Plans**: 1 plan
+- [ ] 06-01-PLAN.md — people pipeline command chaining search → export → find-emails
 **UI hint**: no
 
 ---
@@ -161,7 +162,7 @@ All 16 v1.1 requirements mapped. 0 unmapped.
 | 3. Async Workflows | 1/1 | Complete | 2026-04-17 |
 | 4. I/O Pipeline | 1/1 | Complete | 2026-04-29 |
 | 5. Persistence & Tiers | 0/2 | Not started | - |
-| 6. Pipeline Command | 0/TBD | Not started | - |
+| 6. Pipeline Command | 0/1 | Not started | - |
 
 ---
 *Roadmap created: 2026-03-31*
