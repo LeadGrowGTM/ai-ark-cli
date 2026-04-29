@@ -5,7 +5,7 @@ milestone_name: Data Preservation & Export Pipeline
 status: Planning
 last_updated: "2026-04-29T00:00:00.000Z"
 progress:
-  total_phases: 3
+  total_phases: 2
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -24,15 +24,14 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 Phase: Phase 5 (next to start)
 Plan: —
 Status: Roadmap complete, ready to plan Phase 5
-Last activity: 2026-04-29 — v1.1 roadmap created (3 phases: 5, 6, 7)
+Last activity: 2026-04-29 — Phase 5 (old normalization) dropped; renumbered to 2 phases (5, 6)
 
 ## v1.1 Phase Summary
 
 | Phase | Name | Requirements | Status |
 |-------|------|--------------|--------|
-| 5 | Normalization Layer | NORM-01–04 | Not started |
-| 6 | Persistence & Tiers | PERSIST-01–04, TIER-01–04 | Not started |
-| 7 | Pipeline Command | PIPELINE-01–04 | Not started |
+| 5 | Persistence & Tiers | PERSIST-01–04, TIER-01–04 | Not started |
+| 6 | Pipeline Command | PIPELINE-01–04 | Not started |
 
 ## Accumulated Context
 

@@ -58,13 +58,6 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **PERSIST-03**: User can specify explicit output path with `--output <file>` on any data command
 - [ ] **PERSIST-04**: Results directory created automatically on first save — no manual setup
 
-### NORM — Data Normalization
-
-- [ ] **NORM-01**: `profile.last_name` / `profile.full_name` cleaned — strips LinkedIn junk (credential suffixes, parentheticals like ", CFE (CEO of X)")
-- [ ] **NORM-02**: Current position flattened to top-level fields: `current_company`, `current_company_domain`, `current_company_linkedin`, `current_title`, `current_role_start` (first position_group where date.end is null)
-- [ ] **NORM-03**: Revenue merged to formatted `revenue_range` string (e.g., `"$1M–$5M"`) instead of separate start/end numbers
-- [ ] **NORM-04**: Normalized output schema documented in `docs/OUTPUT-SCHEMA.md`
-
 ### TIERS — Field Filtering
 
 - [ ] **TIER-01**: Default output (and auto-persisted files) strips all non-Tier-1 fields — expiring S3 URLs, null-heavy fields, pagination metadata
@@ -102,6 +95,7 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Feature | Reason |
 |---------|--------|
+| NORM-01–04 (name cleaning, position flattening, revenue formatting) | Handled in skill layer above the CLI — CLI stays dumb |
 | Persona/exclusion logic | Belongs in skill layer, not CLI |
 | Company discovery workflows | Done via AI Ark browser UI |
 | Default filter configs | Skill layer handles smart defaults |

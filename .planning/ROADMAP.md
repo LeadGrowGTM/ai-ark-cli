@@ -95,21 +95,12 @@
 
 ## v1.1 Phases
 
-### Phase 5: Normalization Layer
-**Goal**: Users get clean, flat, predictable records instead of raw nested API noise.
-**Depends on**: Phase 4 (all existing commands and output pipeline)
-**Requirements**: NORM-01, NORM-02, NORM-03, NORM-04
-**Success Criteria** (what must be TRUE):
-  1. `last_name` from a raw profile containing ", CFE (CEO of X)" comes back as just the clean surname — no credential junk
-  2. Every normalized person record has top-level `current_company`, `current_title`, `current_company_domain` fields derived from the first position group with a null end date — no digging into nested arrays
-  3. A company record with separate revenue start/end numbers produces a single `revenue_range` string like "$1M–$5M"
-  4. `docs/OUTPUT-SCHEMA.md` exists and documents every field in the normalized output with type and source mapping
-**Plans**: TBD
-**UI hint**: no
+### ~~Phase 5: Normalization Layer~~ — SKIPPED
+Normalization handled in skill layer above the CLI. CLI stays dumb. NORM-01–04 moved to Out of Scope.
 
-### Phase 6: Persistence & Tiers
+### Phase 5: Persistence & Tiers
 **Goal**: Every result auto-saves to disk by default, and `--profile` controls exactly which fields survive.
-**Depends on**: Phase 5 (normalization must exist before tiered output makes sense)
+**Depends on**: Phase 4
 **Requirements**: PERSIST-01, PERSIST-02, PERSIST-03, PERSIST-04, TIER-01, TIER-02, TIER-03, TIER-04
 **Success Criteria** (what must be TRUE):
   1. Running any data command with no extra flags creates a timestamped file in `~/.ai-ark/results/` — user never has to think about saving
@@ -120,15 +111,15 @@
 **Plans**: TBD
 **UI hint**: no
 
-### Phase 7: Pipeline Command
+### Phase 6: Pipeline Command
 **Goal**: Users run one command to get a fully enriched, email-verified, persisted contact list — no manual trackId juggling.
-**Depends on**: Phase 5 + 6 (normalization and persistence must be in place)
+**Depends on**: Phase 5 (persistence must be in place)
 **Requirements**: PIPELINE-01, PIPELINE-02, PIPELINE-03, PIPELINE-04
 **Success Criteria** (what must be TRUE):
   1. `ai-ark people pipeline --domain example.com --seniority vp` runs all three stages and produces a final JSON file with no manual steps between them
   2. All filter flags available on `people search` work identically on `people pipeline`
   3. Stderr shows stage-labeled progress: `[1/3] Searching...`, `[2/3] Exporting...`, `[3/3] Finding emails...` with record counts at each stage
-  4. Pipeline output is normalized (NORM applied), Tier 1 filtered, and auto-persisted to `~/.ai-ark/results/` — user gets a ready-to-use outbound file
+  4. Pipeline output is Tier 1 filtered and auto-persisted to `~/.ai-ark/results/`
 **Plans**: TBD
 **UI hint**: no
 
