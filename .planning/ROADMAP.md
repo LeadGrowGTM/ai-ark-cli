@@ -13,7 +13,7 @@
 | 3 | Async Workflows | Export people and email finder with auto-polling and progress | ASYNC-01, ASYNC-02, ASYNC-03, ASYNC-04 | 4 |
 | 4 | I/O Pipeline | CSV/stdin input, multi-format output, Clay integration | INPUT-01, INPUT-02, INPUT-03, OUT-01, OUT-02, OUT-03, OUT-04 | 7 |
 | 5 | Persistence & Tiers | 2/2 | Complete    | 2026-04-29 |
-| 6 | Pipeline Command | One-command search → export → find-emails with full output | PIPELINE-01, PIPELINE-02, PIPELINE-03, PIPELINE-04 | 4 |
+| 6 | Pipeline Command | 1/1 | Complete   | 2026-04-30 |
 
 ---
 
@@ -24,7 +24,7 @@
 - [x] **Phase 3: Async Workflows** - Export people and email finder with auto-polling and progress
 - [x] **Phase 4: I/O Pipeline** - CSV/stdin input, multi-format output, Clay integration
 - [x] **Phase 5: Persistence & Tiers** - Auto-save every result + field tier filtering via --profile (completed 2026-04-29)
-- [ ] **Phase 6: Pipeline Command** - One-command search → export → find-emails with full output
+- [x] **Phase 6: Pipeline Command** - One-command search → export → find-emails with full output (completed 2026-04-30)
 
 ---
 
@@ -121,7 +121,7 @@ Normalization handled in skill layer above the CLI. CLI stays dumb. NORM-01–04
   3. Stderr shows stage-labeled progress: `[1/3] Searching...`, `[2/3] Exporting...`, `[3/3] Finding emails...` with record counts at each stage
   4. Pipeline output is Tier 1 filtered and auto-persisted to `~/.ai-ark/results/`
 **Plans**: 1 plan
-- [ ] 06-01-PLAN.md — people pipeline command chaining search → export → find-emails
+- [x] 06-01-PLAN.md — people pipeline command chaining search → export → find-emails
 **UI hint**: no
 
 ---

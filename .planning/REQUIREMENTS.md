@@ -71,10 +71,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### PIPELINE — Chained Workflow Command
 
-- [ ] **PIPELINE-01**: `people pipeline` command runs search → export → find-emails sequentially — no manual trackId passing
-- [ ] **PIPELINE-02**: Pipeline accepts all filter flags from `people search`
-- [ ] **PIPELINE-03**: Per-stage progress to stderr: `[1/3] Searching...`, `[2/3] Exporting...`, `[3/3] Finding emails...` with record counts
-- [ ] **PIPELINE-04**: Pipeline output is normalized (NORM applied), Tier 1 filtered, auto-persisted
+- [x] **PIPELINE-01**: `people pipeline` command runs search → export → find-emails sequentially — no manual trackId passing
+- [x] **PIPELINE-02**: Pipeline accepts all filter flags from `people search`
+- [x] **PIPELINE-03**: Per-stage progress to stderr: `[1/3] Searching...`, `[2/3] Exporting...`, `[3/3] Finding emails...` with record counts
+- [x] **PIPELINE-04**: Pipeline output is normalized (NORM applied), Tier 1 filtered, auto-persisted
 
 ## v2 Requirements
 
@@ -145,10 +145,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TIER-02 | Phase 6 | Complete |
 | TIER-03 | Phase 6 | Complete |
 | TIER-04 | Phase 6 | Complete |
-| PIPELINE-01 | Phase 7 | Pending |
-| PIPELINE-02 | Phase 7 | Pending |
-| PIPELINE-03 | Phase 7 | Pending |
-| PIPELINE-04 | Phase 7 | Pending |
+| PIPELINE-01 | Phase 7 | Complete |
+| PIPELINE-02 | Phase 7 | Complete |
+| PIPELINE-03 | Phase 7 | Complete |
+| PIPELINE-04 | Phase 7 | Complete |
 
 **Coverage:**
 - v1 requirements: 24 total — mapped to phases: 24 — unmapped: 0

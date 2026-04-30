@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Phases
 status: verifying
-last_updated: "2026-04-29T21:10:43.015Z"
-last_activity: 2026-04-29
+last_updated: "2026-04-30T02:03:22.725Z"
+last_activity: 2026-04-30
 progress:
   total_phases: 6
-  completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  completed_phases: 3
+  total_plans: 5
+  completed_plans: 5
 ---
 
 # Project State: AI Ark CLI — v1.1
@@ -22,11 +22,11 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 
 ## Current Position
 
-Phase: 6
-Plan: Not started
+Phase: 06 (pipeline-command) — EXECUTING
+Plan: 1 of 1
 Status: Phase complete — ready for verification
-Last activity: 2026-04-29
-Last session: 2026-04-29T21:06:04.171Z
+Last activity: 2026-04-30
+Last session: 2026-04-30T02:03:22.722Z
 
 ## v1.1 Phase Summary
 
@@ -42,6 +42,8 @@ Last session: 2026-04-29T21:06:04.171Z
 - **05-01**: Batch paths persist `allResults` once at end, not per-domain — one file per invocation
 - [Phase 05]: Default profile is outbound — behavior change for existing pipe workflows (--profile raw to restore API shape)
 - [Phase 05]: filterByProfile runs BEFORE persistResults — saved files always match stdout shape
+- [Phase 06]: exportTrackId (not search trackId) passed to email-finder — export job produces the inquiry records that email-finder enriches
+- [Phase 06]: No --no-wait or --page on pipeline — always waits, single-pass internal pagination
 
 ## Accumulated Context
 
