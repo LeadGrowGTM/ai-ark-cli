@@ -82,9 +82,11 @@ export function peopleExportCommand(): Command {
           process.exit(1);
         }
 
+        // webhook is required by the API even though we poll via statistics endpoint
         const body: ExportPeopleRequest = {
           page: 0,
           size: parseInt(opts.size, 10),
+          webhook: "https://localhost/no-op",
         };
 
         const account = buildAccountFilter(filterOpts, "people");
