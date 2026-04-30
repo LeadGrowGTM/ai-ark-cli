@@ -122,10 +122,10 @@ export function peoplePipelineCommand(): Command {
         }
 
         // -----------------------------------------------------------------------
-        // Stage 2 — Export
+        // Stage 2 — Export with email (export API includes email-finding)
         // -----------------------------------------------------------------------
         process.stderr.write("[2/3] Exporting...\n");
-        // webhook is required by the API even though we poll via statistics endpoint
+        // webhook required by API even though we poll via results endpoint
         const exportBody: ExportPeopleRequest = { page: 0, size: parseInt(opts.size, 10), webhook: "https://example.com/webhook" };
         if (account) exportBody.account = account;
         if (contact) exportBody.contact = contact;
@@ -140,26 +140,15 @@ export function peoplePipelineCommand(): Command {
         process.stderr.write(`[2/3] Exporting... done — ${exportPoll.found} records\n`);
 
         // -----------------------------------------------------------------------
-        // Stage 3 — Find emails (uses exportTrackId — the export job produces the
-        // inquiry records that email-finder needs to enrich)
+        // Stage 3 — Fetch all export results (emails included by the export job)
         // -----------------------------------------------------------------------
-        process.stderr.write("[3/3] Finding emails...\n");
-        const finderBody: EmailFinderRequest = { trackId: exportTrackId };
-        await client.post<EmailFinderStatistics>("/people/email-finder", finderBody);
-        const finderStatsEndpoint: ApiEndpoint = `/people/email-finder/${exportTrackId}/statistics`;
-        const finderPoll = await pollUntilDone(client, finderStatsEndpoint);
-        if (finderPoll.state === "FAILED") {
-          console.error(`Pipeline failed at stage [3/3]: email finder failed after ${finderPoll.elapsed}s`);
-          process.exit(1);
-        }
-
-        // Fetch all email-finder results (paginated)
+        process.stderr.write("[3/3] Fetching results...\n");
         const allResults: unknown[] = [];
         let page = 0;
         const pageSize = 100;
         while (true) {
-          const results = await client.get<EmailFinderResultsResponse>(
-            `/people/email-finder/${exportTrackId}/inquiries?page=${page}&size=${pageSize}` as ApiEndpoint,
+          const results = await client.get<ExportPeopleResultsResponse>(
+            `/people/export/${exportTrackId}/inquiries?page=${page}&size=${pageSize}` as ApiEndpoint,
           );
           allResults.push(...results.content);
           if (results.last || results.content.length === 0) break;

@@ -52,11 +52,15 @@ export class AiArkClient {
     };
   }
 
+  private get getHeaders(): Record<string, string> {
+    return { "X-TOKEN": this.apiKey };
+  }
+
   async get<T>(endpoint: ApiEndpoint): Promise<T> {
     return this.requestWithRetry<T>(() =>
       fetch(`${BASE_URL}${endpoint}`, {
         method: "GET",
-        headers: this.headers,
+        headers: this.getHeaders,
       }),
     );
   }

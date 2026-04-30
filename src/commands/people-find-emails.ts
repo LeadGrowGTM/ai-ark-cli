@@ -37,8 +37,10 @@ export function peopleFindEmailsCommand(): Command {
           process.exit(1);
         }
 
+        // webhook required by API even though we poll via results endpoint
         const body: EmailFinderRequest = {
           trackId: opts.trackId,
+          webhook: "https://example.com/webhook",
         };
 
         // Submit the email finder job
