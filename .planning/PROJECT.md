@@ -27,7 +27,11 @@ Reliable, typed access to every AI Ark API endpoint from the command line, with 
 
 ### Active (v1.1)
 
-- [ ] `people pipeline` command chaining search → export → find-emails with auto-persist
+(None — all v1.1 requirements shipped)
+
+### Validated (v1.1 — Phase 6 complete 2026-04-30)
+
+- [x] `people pipeline` command chaining search → export → find-emails with auto-persist (Validated in Phase 6: pipeline-command)
 
 ### Validated (v1.1 — Phase 5 complete 2026-04-29)
 
