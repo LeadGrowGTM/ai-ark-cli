@@ -50,6 +50,7 @@ import { peopleAnalyzeCommand } from "./commands/people-analyze.js";
 import { peopleExportCommand } from "./commands/people-export.js";
 import { peopleFindEmailsCommand } from "./commands/people-find-emails.js";
 import { peopleExportOneCommand } from "./commands/people-export-one.js";
+import { peoplePipelineCommand } from "./commands/people-pipeline.js";
 import { startCommand } from "./commands/start.js";
 
 // Global error handler for uncaught exceptions
@@ -90,5 +91,6 @@ people.addCommand(peopleAnalyzeCommand());
 people.addCommand(peopleExportCommand());
 people.addCommand(peopleFindEmailsCommand());
 people.addCommand(peopleExportOneCommand());
+people.addCommand(peoplePipelineCommand());
 
 program.parse();
