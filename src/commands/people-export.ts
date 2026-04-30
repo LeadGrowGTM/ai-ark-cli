@@ -86,7 +86,7 @@ export function peopleExportCommand(): Command {
         const body: ExportPeopleRequest = {
           page: 0,
           size: parseInt(opts.size, 10),
-          webhook: "https://localhost/no-op",
+          webhook: "https://example.com/webhook",
         };
 
         const account = buildAccountFilter(filterOpts, "people");

@@ -126,7 +126,7 @@ export function peoplePipelineCommand(): Command {
         // -----------------------------------------------------------------------
         process.stderr.write("[2/3] Exporting...\n");
         // webhook is required by the API even though we poll via statistics endpoint
-        const exportBody: ExportPeopleRequest = { page: 0, size: parseInt(opts.size, 10), webhook: "https://localhost/no-op" };
+        const exportBody: ExportPeopleRequest = { page: 0, size: parseInt(opts.size, 10), webhook: "https://example.com/webhook" };
         if (account) exportBody.account = account;
         if (contact) exportBody.contact = contact;
         const exportJob = await client.post<ExportJobResponse>("/people/export", exportBody);
