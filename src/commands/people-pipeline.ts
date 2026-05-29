@@ -47,6 +47,13 @@ export function peoplePipelineCommand(): Command {
     .option("--badge <badges...>", "Filter by profile badge (PAID_SOCIAL_MEMBERS, HIRING, OPEN_TO_WORK, CREATOR, INFLUENCER)")
     .option("--job-duration-min <months>", "Minimum months in current role")
     .option("--job-duration-max <months>", "Maximum months in current role")
+    // Social reach (LinkedIn only)
+    .option("--min-followers <count>", "Min LinkedIn followers (e.g. 5000 or 5k)")
+    .option("--max-followers <count>", "Max LinkedIn followers")
+    .option("--followers <bands>", "Follower bands, comma-separated (e.g. 1k-2k,5k+,<500)")
+    .option("--min-connections <count>", "Min LinkedIn connections (e.g. 500)")
+    .option("--max-connections <count>", "Max LinkedIn connections")
+    .option("--connections <bands>", "Connection bands, comma-separated (e.g. 500-1k,3k+)")
     // Exclude filters
     .option("--exclude-domain <domains...>", "Exclude company domains")
     .option("--exclude-domain-file <file>", "Exclude domains from CSV file")

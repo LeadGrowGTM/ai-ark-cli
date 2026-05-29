@@ -9,7 +9,12 @@
  */
 
 import type { SearchMode } from "./types/common.js";
-import type { AccountFilter, ContactFilter } from "./types/requests.js";
+import type {
+  AccountFilter,
+  ContactFilter,
+  FollowerCountFilter,
+  FollowerCountRange,
+} from "./types/requests.js";
 import { readCsvFile } from "./io/index.js";
 
 // ---------------------------------------------------------------------------
@@ -105,6 +110,14 @@ export interface FilterOpts {
   excludeDepartment?: string[];
   excludeBadge?: string[];
   excludeContactName?: string[];
+
+  // Social reach (LinkedIn followers / connections)
+  minFollowers?: string;
+  maxFollowers?: string;
+  followers?: string;
+  minConnections?: string;
+  maxConnections?: string;
+  connections?: string;
 
   // Global
   matchMode?: string;
@@ -316,6 +329,19 @@ export function buildContactFilter(opts: FilterOpts): ContactFilter | undefined 
     hasFilter = true;
   }
 
+  // Social reach — LinkedIn followers / connections (RANGE)
+  const followers = buildFollowerFilter(opts.minFollowers, opts.maxFollowers, opts.followers);
+  const connections = buildFollowerFilter(opts.minConnections, opts.maxConnections, opts.connections);
+  if (followers || connections) {
+    contact.socialMediaFollower = {
+      linkedin: {
+        ...(followers ? { followers } : {}),
+        ...(connections ? { connections } : {}),
+      },
+    };
+    hasFilter = true;
+  }
+
   return hasFilter ? contact : undefined;
 }
 
@@ -332,6 +358,81 @@ function loadExcludeDomains(opts: FilterOpts): string[] {
     domains.push(...csvDomains);
   }
   return domains;
+}
+
+/**
+ * Parse a follower/connection count, accepting a `k` suffix.
+ * "5000" → 5000, "5k" → 5000, "7.5k" → 7500.
+ */
+function parseCount(s: string): number {
+  const t = s.trim().toLowerCase();
+  if (t.endsWith("k")) {
+    const n = parseFloat(t.slice(0, -1));
+    return isNaN(n) ? NaN : Math.round(n * 1000);
+  }
+  return Number(t);
+}
+
+/**
+ * Parse a single band token into a range.
+ *   "5k+"      → { start: 5000 }     (open-ended)
+ *   "<500"     → { end: 500 }        ("less than")
+ *   "1k-2k"    → { start: 1000, end: 2000 }
+ *   "5000"     → { start: 5000 }     (bare number = minimum)
+ */
+function parseFollowerBand(token: string): FollowerCountRange | undefined {
+  const t = token.trim();
+  if (!t) return undefined;
+  if (t.endsWith("+")) {
+    const n = parseCount(t.slice(0, -1));
+    return isNaN(n) ? undefined : { start: n };
+  }
+  if (t.startsWith("<") || t.startsWith("-")) {
+    const n = parseCount(t.slice(1));
+    return isNaN(n) ? undefined : { end: n };
+  }
+  if (t.includes("-")) {
+    const [a, b] = t.split("-").map((s) => parseCount(s));
+    if (isNaN(a) || isNaN(b)) return undefined;
+    return { start: a, end: b };
+  }
+  const n = parseCount(t);
+  return isNaN(n) ? undefined : { start: n };
+}
+
+/**
+ * Build a follower/connection RANGE filter from --min/--max convenience flags
+ * and/or a comma-separated --bands string. Multiple bands are OR'd. Returns
+ * undefined when no usable range is produced.
+ */
+function buildFollowerFilter(
+  min?: string,
+  max?: string,
+  bands?: string,
+): FollowerCountFilter | undefined {
+  const range: FollowerCountRange[] = [];
+
+  if (bands) {
+    for (const tok of bands.split(",")) {
+      const r = parseFollowerBand(tok);
+      if (r) range.push(r);
+    }
+  }
+
+  if (min !== undefined || max !== undefined) {
+    const r: FollowerCountRange = {};
+    if (min !== undefined) {
+      const n = parseCount(min);
+      if (!isNaN(n)) r.start = n;
+    }
+    if (max !== undefined) {
+      const n = parseCount(max);
+      if (!isNaN(n)) r.end = n;
+    }
+    if (r.start !== undefined || r.end !== undefined) range.push(r);
+  }
+
+  return range.length > 0 ? { type: "RANGE", range } : undefined;
 }
 
 function parseGeo(

@@ -26,6 +26,8 @@ export const PERSON_TIER1_FIELDS = [
   "skills",
   "member_badges",
   "seniority",
+  "followers_count",
+  "connections_count",
   "email",
   "emailVerified",
   "phones",
@@ -82,6 +84,8 @@ function filterPerson(p: any): Record<string, unknown> {
     skills: p.skills,
     member_badges: p.member_badges,
     seniority: get(p, "department.seniority"),
+    followers_count: get(p, "statistics.network.followers_count"),
+    connections_count: get(p, "statistics.network.connections_count"),
     email: p.email,
     emailVerified: p.emailVerified,
     phones: Array.isArray(p.phones)

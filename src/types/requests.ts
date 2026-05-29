@@ -84,6 +84,29 @@ export interface ExperienceFilter {
   };
 }
 
+/** Single follower/connection count band. Omit `end` for "X+", omit `start` for "< X". */
+export interface FollowerCountRange {
+  start?: number;
+  end?: number;
+}
+
+/** Range filter for follower/connection counts. Multiple `range` entries are OR'd. */
+export interface FollowerCountFilter {
+  type: "RANGE";
+  range: FollowerCountRange[];
+}
+
+/**
+ * Social media follower/connection filter. Only `linkedin` is currently supported —
+ * facebook/twitter/instagram are rejected by the API with HTTP 501.
+ */
+export interface SocialMediaFollowerFilter {
+  linkedin?: {
+    followers?: FollowerCountFilter;
+    connections?: FollowerCountFilter;
+  };
+}
+
 export interface ContactFilter {
   // Profile
   fullName?: ContactSearchMatchFilter;
@@ -92,6 +115,7 @@ export interface ContactFilter {
   location?: FilterWithAllAny;
   languageSkills?: FilterWithAllAny;
   profileBadge?: FilterWithAllAny;
+  socialMediaFollower?: SocialMediaFollowerFilter;
   // Professional
   company?: FilterWithAllAny;
   seniority?: FilterWithAllAny;

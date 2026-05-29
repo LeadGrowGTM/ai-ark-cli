@@ -295,6 +295,8 @@ bun run src/index.ts companies search \
 | Tech stack | `--technology` | `--technology "Salesforce"` |
 | Funding stage | `--funding-type` | `--funding-type SERIES_A SERIES_B` |
 | Profile badge | `--badge` | `--badge PAID_SOCIAL_MEMBERS` |
+| LinkedIn followers | `--min-followers` / `--max-followers` / `--followers` | `--min-followers 5k` or `--followers "1k-2k,30k+"` |
+| LinkedIn connections | `--min-connections` / `--max-connections` / `--connections` | `--min-connections 500` or `--connections "500-1k,3k+"` |
 | Geo radius | `--geo` | `--geo 40.71,-74.00,50km` |
 | Lookalike | `--lookalike` | `--lookalike hubspot.com` |
 | Exclude domains | `--exclude-domain-file` | `--exclude-domain-file contacted.csv` |
