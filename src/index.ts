@@ -1,45 +1,19 @@
 #!/usr/bin/env bun
-import { readFileSync } from "fs";
-import { resolve, dirname } from "path";
-import { fileURLToPath } from "url";
 import { Command } from "commander";
+import { loadEnvFromDirs, defaultEnvDirs } from "./env-loader.js";
 
 // Load .env so callers don't need to inline the key
-// Try CLI's own directory first, then known install, then CWD as fallback
-const envSearched: string[] = [];
+// Search: CLI's own directory, then CWD. No hardcoded user paths.
+const env: Record<string, string> = {};
+const searched = loadEnvFromDirs(defaultEnvDirs(), env);
 
-function loadEnvFile(dir: string): boolean {
-  envSearched.push(dir);
-  try {
-    const p = resolve(dir, ".env");
-    const lines = readFileSync(p, "utf-8").replace(/\r/g, "").split("\n");
-    for (const line of lines) {
-      const match = line.match(/^\s*([^#=]+?)\s*=\s*(.*?)\s*$/);
-      if (match && !process.env[match[1]]) {
-        let val = match[2];
-        if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-          val = val.slice(1, -1);
-        }
-        process.env[match[1]] = val;
-      }
-    }
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-const cliDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-if (!loadEnvFile(cliDir)) {
-  // Hardcoded fallback for known install location
-  const knownInstall = resolve("C:/Users/mitch/Everything_CC/ai-ark-cli");
-  if (cliDir !== knownInstall && !loadEnvFile(knownInstall)) {
-    loadEnvFile(process.cwd());
-  }
+// Merge loaded values into process.env (first writer wins — pre-set env vars take priority)
+for (const [k, v] of Object.entries(env)) {
+  if (!process.env[k]) process.env[k] = v;
 }
 
 // Expose searched dirs so createClient() can report them in errors
-process.env._AI_ARK_ENV_SEARCHED = envSearched.join(";");
+process.env._AI_ARK_ENV_SEARCHED = searched.join(";");
 
 import { creditsCommand } from "./commands/credits.js";
 import { companiesSearchCommand } from "./commands/companies-search.js";
