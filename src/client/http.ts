@@ -36,13 +36,15 @@ export class AiArkApiError extends Error {
 export class AiArkClient {
   private readonly apiKey: string;
   private readonly rateLimiter: RateLimiter;
+  private readonly fetcher: typeof fetch;
 
-  constructor(apiKey: string) {
+  constructor(apiKey: string, fetcher: typeof fetch = globalThis.fetch) {
     if (!apiKey || apiKey.trim() === "") {
       throw new Error("API key must not be empty");
     }
     this.apiKey = apiKey;
     this.rateLimiter = new RateLimiter();
+    this.fetcher = fetcher;
   }
 
   private get headers(): Record<string, string> {
@@ -58,7 +60,7 @@ export class AiArkClient {
 
   async get<T>(endpoint: ApiEndpoint): Promise<T> {
     return this.requestWithRetry<T>(() =>
-      fetch(`${BASE_URL}${endpoint}`, {
+      this.fetcher(`${BASE_URL}${endpoint}`, {
         method: "GET",
         headers: this.getHeaders,
       }),
@@ -67,7 +69,7 @@ export class AiArkClient {
 
   async post<T>(endpoint: ApiEndpoint, body: unknown): Promise<T> {
     return this.requestWithRetry<T>(() =>
-      fetch(`${BASE_URL}${endpoint}`, {
+      this.fetcher(`${BASE_URL}${endpoint}`, {
         method: "POST",
         headers: this.headers,
         body: JSON.stringify(body),
