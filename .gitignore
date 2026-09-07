@@ -6,3 +6,5 @@ dist/
 temp/
 *.log
 .DS_Store
+.worktrees/
+.claude/skills/
